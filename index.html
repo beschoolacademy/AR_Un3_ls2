@@ -1,0 +1,2230 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>be;school | مدرسة البرمجة - الدرس 3-2: طرق اتصال تطبيقات الويب</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        beschool: {
+                            orange: '#FF5500',
+                            orangeDark: '#E04A00',
+                            orangeLight: '#FFF4ED',
+                            navy: '#0B1B48',
+                            navyLight: '#14285D',
+                            navyDark: '#07112E',
+                            slate: '#334155',
+                            muted: '#64748B',
+                            border: '#E2E8F0',
+                            bg: '#F8FAFC',
+                            card: '#FFFFFF'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'Segoe UI', 'Tahoma', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #F8FAFC;
+            color: #0B1B48;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        .flashcard-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF5500;
+        }
+
+        .main-top-tab {
+            position: relative;
+            transition: all 0.25s ease;
+        }
+        .main-top-tab.active {
+            color: #FF5500;
+            background-color: #FFFFFF;
+            border-bottom: 3.5px solid #FF5500;
+            font-weight: 800;
+        }
+        .main-top-tab:not(.active) {
+            color: #64748B;
+            background-color: transparent;
+            border-bottom: 3.5px solid transparent;
+        }
+        .main-top-tab:not(.active):hover {
+            color: #0B1B48;
+            background-color: #F1F5F9;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-900 antialiased selection:bg-orange-500 selection:text-white font-sans">
+
+    <!-- 1. الشاشة الافتتاحية الأولى (#screen-landing) -->
+    <div id="screen-landing" class="min-h-screen flex flex-col bg-[#0d1527] fade-in">
+        <div class="w-full bg-[#0d1527] text-white px-4 py-3 border-b border-slate-800/80 flex items-center justify-between">
+            <button onclick="window.close()" class="w-9 h-9 rounded-full bg-slate-800/90 text-slate-300 hover:text-white flex items-center justify-center transition" title="إغلاق">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+            <span class="text-xs sm:text-sm font-bold text-slate-200 tracking-wide">
+                مراجعة الدرس 3-2 - Be School
+            </span>
+            <button class="w-9 h-9 rounded-full bg-slate-800/90 text-slate-300 hover:text-white flex items-center justify-center transition" title="خيارات">
+                <i class="fa-solid fa-ellipsis text-sm"></i>
+            </button>
+        </div>
+
+        <div class="bg-gradient-to-b from-white via-orange-50/20 to-white pt-10 pb-12 px-4 sm:px-6 text-center border-b border-slate-200/60">
+            <div class="max-w-md mx-auto space-y-4">
+                <div class="inline-flex flex-col items-center select-none">
+                    <div dir="ltr" class="flex items-baseline font-black text-4xl sm:text-5xl tracking-tight leading-none">
+                        <span class="text-beschool-orange font-black">be</span><span class="text-beschool-orange font-black">;</span><span class="text-beschool-navy font-black">school</span>
+                    </div>
+                    <span class="text-sm font-black text-beschool-navy tracking-wider mt-1.5">مدرسة البرمجة</span>
+                </div>
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-[#0B1B48] leading-tight pt-2">
+                    منصة Be School للمراجعة التفاعلية
+                </h1>
+                <p class="text-xs text-slate-500 font-bold max-w-xs mx-auto">
+                    البرمجة والذكاء الاصطناعي • الصف الثاني الثانوي 2026/2027
+                </p>
+            </div>
+        </div>
+
+        <div class="flex-grow flex flex-col justify-center max-w-md w-full mx-auto px-4 py-8 space-y-5">
+            <div class="bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-100 text-center space-y-4">
+                <div class="inline-flex items-center gap-1.5 bg-orange-100 text-beschool-orange px-3 py-1 rounded-full text-xs font-black">
+                    <i class="fa-solid fa-network-wired"></i>
+                    <span>الوحدة الثالثة: تطبيقات الويب • الدرس 3-2</span>
+                </div>
+                
+                <h2 class="text-xl sm:text-2xl font-black text-beschool-navy leading-snug">
+                    طرق اتصال تطبيقات الويب
+                </h2>
+
+                <p class="text-xs text-slate-500 leading-relaxed font-medium">
+                    نموذج العميل والخادم، دورة الطلب والاستجابة، الفارق بين HTTP و HTTPS، أساليب GET و POST، رموز الحالة (200, 404, 500)، وواجهات API وصيغة JSON.
+                </p>
+
+                <div class="pt-2">
+                    <button onclick="goToNameEntryScreen()" class="w-full py-3.5 px-6 rounded-2xl bg-beschool-orange hover:bg-beschool-orangeDark text-white font-black text-base shadow-lg shadow-orange-500/30 active:scale-[0.98] transition flex items-center justify-center gap-2">
+                        <span>ابدأ المراجعة</span>
+                        <span class="text-lg">🎯</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-md text-center">
+                <p class="text-[11px] sm:text-xs text-slate-600 font-bold leading-relaxed">
+                    مرحباً بك في الدرس الثاني من الوحدة الثالثة لمادة البرمجة والذكاء الاصطناعي.
+                </p>
+            </div>
+        </div>
+
+        <div class="py-4 text-center text-[11px] text-slate-400">
+            be;school © مدرسة البرمجة 2026/2027
+        </div>
+    </div>
+
+    <!-- 2. شاشة تسجيل اسم الطالب (#screen-name-entry) -->
+    <div id="screen-name-entry" class="hidden min-h-screen flex flex-col bg-[#0d1527] fade-in">
+        <div class="w-full bg-[#0d1527] text-white px-4 py-3 border-b border-slate-800/80 flex items-center justify-between">
+            <button onclick="goToLandingScreen()" class="w-9 h-9 rounded-full bg-slate-800/90 text-slate-300 hover:text-white flex items-center justify-center transition" title="رجوع">
+                <i class="fa-solid fa-arrow-right text-sm"></i>
+            </button>
+            <span class="text-xs sm:text-sm font-bold text-slate-200">
+                تسجيل اسم الطالب
+            </span>
+            <div class="w-9"></div>
+        </div>
+
+        <div class="flex-grow flex items-center justify-center p-4">
+            <div class="max-w-md w-full bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6">
+                <div class="text-center space-y-2">
+                    <div class="w-16 h-16 rounded-2xl bg-orange-100 text-beschool-orange mx-auto flex items-center justify-center text-2xl shadow-inner">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-black text-beschool-navy">
+                        سجل اسمك للمتابعة
+                    </h3>
+                    <p class="text-xs text-slate-500 font-medium">
+                        أدخل اسمك لعرض نتيجتك وتقييمك في اختبار طرق اتصال تطبيقات الويب (50 سؤالاً)
+                    </p>
+                </div>
+
+                <div class="space-y-2 text-right">
+                    <label for="studentNameInput" class="block text-xs font-black text-beschool-navy">
+                        اسم الطالب / الطالبة:
+                    </label>
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="studentNameInput" 
+                            dir="rtl"
+                            placeholder="اكتب اسمك هنا..." 
+                            maxlength="40"
+                            onkeypress="if(event.key === 'Enter') startPlatformWithStudentName()"
+                            class="w-full py-3.5 pr-11 pl-4 rounded-xl border-2 border-slate-200 focus:border-beschool-orange focus:outline-none text-sm font-bold text-beschool-navy placeholder:text-slate-400 transition"
+                        />
+                        <i class="fa-regular fa-id-card absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    </div>
+                    <div id="nameErrorAlert" class="hidden text-[11px] font-bold text-rose-600 flex items-center gap-1 mt-1">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span>يرجى إدخال اسمك للمتابعة!</span>
+                    </div>
+                </div>
+
+                <button onclick="startPlatformWithStudentName()" class="w-full py-3.5 px-6 rounded-2xl bg-beschool-orange hover:bg-beschool-orangeDark text-white font-black text-sm sm:text-base shadow-lg shadow-orange-500/30 active:scale-[0.98] transition flex items-center justify-center gap-2">
+                    <span>دخول المنصة والمراجعة</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. المنصة التعليمية الرئيسية (#screen-main-platform) -->
+    <div id="screen-main-platform" class="hidden min-h-screen flex flex-col bg-[#F8FAFC] fade-in">
+        <header class="sticky top-0 z-50 bg-white border-b border-beschool-border shadow-xs">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="h-20 flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="flex flex-col select-none cursor-pointer group items-center sm:items-start" onclick="switchNavTab('study')">
+                            <div dir="ltr" class="flex items-baseline font-black text-3xl sm:text-4xl tracking-tight leading-none">
+                                <span class="text-beschool-orange font-black">be</span><span class="text-beschool-orange font-black">;</span><span class="text-beschool-navy font-black">school</span>
+                            </div>
+                            <span class="text-xs sm:text-sm font-black text-beschool-navy tracking-wider mt-1 text-center w-full group-hover:text-beschool-orange transition-colors">مدرسة البرمجة</span>
+                        </div>
+                        <div class="hidden md:block h-10 w-px bg-beschool-border mr-2"></div>
+                        <div class="hidden md:flex flex-col">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-orange-50 text-beschool-orange border border-orange-200/80 w-fit">
+                                <i class="fa-solid fa-graduation-cap text-[10px]"></i>
+                                منهج الحاسب والذكاء الاصطناعي 2026/2027
+                            </span>
+                            <span class="text-xs font-bold text-beschool-slate mt-1">الصف الثاني الثانوي • الوحدة الثالثة: تطبيقات الويب</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <div class="flex items-center gap-2 bg-orange-50/80 border border-orange-200 px-3 py-1.5 rounded-xl">
+                            <i class="fa-solid fa-user-check text-beschool-orange text-xs"></i>
+                            <span id="headerStudentName" class="text-xs font-black text-beschool-navy max-w-[110px] sm:max-w-xs truncate">
+                                طالب Be School
+                            </span>
+                        </div>
+                        <button onclick="exitToLanding()" title="خروج" class="p-2.5 rounded-xl border border-beschool-border hover:bg-rose-50 hover:text-rose-600 text-beschool-slate text-xs font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+                            <span class="hidden sm:inline">خروج</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 border-t border-beschool-border">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <nav class="flex items-center justify-center sm:justify-start gap-1 sm:gap-3 text-xs sm:text-base font-bold overflow-x-auto py-1">
+                        <button id="tabNav-study" onclick="switchNavTab('study')" class="main-top-tab active flex-1 sm:flex-initial py-3 px-3 sm:px-5 rounded-t-xl flex items-center justify-center gap-2 shrink-0">
+                            <i class="fa-solid fa-book-open text-sm sm:text-base"></i>
+                            <span>1. الشرح التفاعلي</span>
+                        </button>
+                        <button id="tabNav-revision" onclick="switchNavTab('revision')" class="main-top-tab flex-1 sm:flex-initial py-3 px-3 sm:px-5 rounded-t-xl flex items-center justify-center gap-2 shrink-0">
+                            <i class="fa-solid fa-layer-group text-sm sm:text-base"></i>
+                            <span>2. المراجعة السريعة</span>
+                        </button>
+                        <button id="tabNav-book-solutions" onclick="switchNavTab('book-solutions')" class="main-top-tab flex-1 sm:flex-initial py-3 px-3 sm:px-5 rounded-t-xl flex items-center justify-center gap-2 shrink-0">
+                            <i class="fa-solid fa-book-bookmark text-sm sm:text-base text-beschool-orange"></i>
+                            <span>3. حل تمارين الكتاب</span>
+                        </button>
+                        <button id="tabNav-questions" onclick="switchNavTab('questions')" class="main-top-tab flex-1 sm:flex-initial py-3 px-3 sm:px-5 rounded-t-xl flex items-center justify-center gap-2 shrink-0">
+                            <i class="fa-solid fa-circle-question text-sm sm:text-base"></i>
+                            <span>4. الاختبار (50 سؤالاً)</span>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+            <!-- Banner Header -->
+            <div class="bg-white rounded-2xl p-5 sm:p-7 border border-beschool-border shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="space-y-1.5">
+                    <div class="flex items-center gap-2 text-xs font-bold text-beschool-muted">
+                        <span>الوحدة الثالثة: تطبيقات الويب</span>
+                        <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                        <span class="text-beschool-orange font-black">الدرس 3-2</span>
+                    </div>
+                    <h1 class="text-xl sm:text-2xl lg:text-3xl font-black text-beschool-navy">
+                        طرق اتصال تطبيقات الويب (Web Application Communication Methods)
+                    </h1>
+                    <p class="text-xs sm:text-sm text-beschool-muted">
+                        لغة التفاهم الرقمي: دورة الطلب والاستجابة، حماية HTTPS بـ TLS، أسلوبا GET و POST، رموز حالة الخادم (200, 404, 500)، وتبادل البيانات المهيكلة بـ API و JSON.
+                    </p>
+                </div>
+                <button onclick="switchNavTab('questions')" class="px-5 py-2.5 rounded-xl bg-beschool-orange hover:bg-beschool-orangeDark text-white text-xs sm:text-sm font-black flex items-center gap-2 shadow-xs transition">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>دخول الاختبار (50 سؤالاً)</span>
+                </button>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- 1. تبويب الشرح (STUDY TAB) -->
+            <!-- ========================================================================= -->
+            <div id="pane-study" class="space-y-6">
+                <!-- فكرة مدخل الدرس -->
+                <div class="bg-gradient-to-r from-beschool-navy via-beschool-navyLight to-[#1e3a8a] text-white rounded-3xl p-6 sm:p-8 shadow-md relative overflow-hidden">
+                    <div class="relative z-10 space-y-3">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black bg-beschool-orange text-white shadow-xs">
+                            <i class="fa-solid fa-comments"></i>
+                            <span>كيف تتحدث المتصفحات مع الخوادم حول العالم عبر أسلاك وأثير الإنترنت؟</span>
+                        </div>
+                        <h2 class="text-xl sm:text-2xl lg:text-3xl font-black leading-snug">
+                            تطبيق الويب يعمل كتبادل منظم: العميل يطلب، والخادم يعالج ويستجيب وفق بروتوكولات صارمة!
+                        </h2>
+                        <p class="text-xs sm:text-sm text-slate-200 leading-relaxed max-w-3xl">
+                            في الدرس السابق تعلمنا أن تطبيق الويب مبني من واجهة أمامية وخلفية وقاعدة بيانات. في هذا الدرس، نكتشف الشرايين التي تربط هذه الأجزاء: كيف يسافر طلبك عندما تضغط على رابط أو ترسل نموذج تسجيل، وما القواعد (HTTP/HTTPS) التي تحكم المحادثة، وماذا تعني رموز الإجابات التي يعيدها السيرفر؟
+                        </p>
+                    </div>
+                </div>
+
+                <!-- الرسم التوضيحي 1: الشكل 3.2.1 - نموذج العميل والخادم ودورة الطلب والاستجابة (ص 58) -->
+                <div class="bg-white rounded-2xl p-6 border border-beschool-border shadow-xs space-y-5">
+                    <div class="border-b border-beschool-border pb-3 flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-black bg-beschool-navy text-white px-2.5 py-0.5 rounded-md">الشكل 3.2.1 من كتاب الوزارة ص 58</span>
+                            <h3 class="text-lg sm:text-xl font-black text-beschool-navy mt-1">التواصل بين العميل والخادم (Client-Server Architecture)</h3>
+                        </div>
+                        <span class="text-xs font-bold text-beschool-muted">دورة الطلب (Request) والاستجابة (Response)</span>
+                    </div>
+
+                    <!-- SVG Client-Server Architecture (مطابق تماماً للشكل 3.2.1 ص 58) -->
+                    <div class="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200">
+                        <div class="w-full overflow-x-auto">
+                            <svg viewBox="0 0 760 210" class="w-full h-auto min-w-[700px] select-none font-sans" dir="ltr">
+                                <!-- Client Box (Left) -->
+                                <g transform="translate(40, 25)">
+                                    <rect x="0" y="0" width="180" height="150" rx="14" fill="#FFFFFF" stroke="#0B1B48" stroke-width="2.5"/>
+                                    <rect x="15" y="14" width="150" height="26" rx="6" fill="#F1F5F9"/>
+                                    <text x="90" y="32" font-size="13" font-weight="900" fill="#0B1B48" text-anchor="middle">العميل (Client)</text>
+                                    
+                                    <!-- Browser sketch -->
+                                    <rect x="40" y="52" width="100" height="58" rx="6" fill="#FFF4ED" stroke="#FF5500" stroke-width="1.8"/>
+                                    <circle cx="50" cy="62" r="2.5" fill="#FF5500"/>
+                                    <circle cx="58" cy="62" r="2.5" fill="#FF5500"/>
+                                    <line x1="48" y1="74" x2="132" y2="74" stroke="#FF5500" stroke-width="2"/>
+                                    <line x1="48" y1="84" x2="115" y2="84" stroke="#CBD5E1" stroke-width="2"/>
+                                    <line x1="48" y1="94" x2="125" y2="94" stroke="#CBD5E1" stroke-width="2"/>
+
+                                    <text x="90" y="128" font-size="11" font-weight="800" fill="#0B1B48" text-anchor="middle">متصفح الويب / تطبيق الهاتف</text>
+                                    <text x="90" y="143" font-size="9.5" font-weight="700" fill="#64748B" text-anchor="middle">(يطلب البيانات أو المعالجة)</text>
+                                </g>
+
+                                <!-- Central Communication Streams -->
+                                <g transform="translate(240, 45)">
+                                    <!-- Request Stream (Top Arrow) -->
+                                    <g>
+                                        <rect x="25" y="0" width="230" height="34" rx="17" fill="#FFF4ED" stroke="#FF5500" stroke-width="2"/>
+                                        <text x="140" y="21" font-size="11.5" font-weight="900" fill="#E04A00" text-anchor="middle">"أرني هذه الصفحة" (الطلب Request)</text>
+                                        <line x1="0" y1="17" x2="275" y2="17" stroke="#FF5500" stroke-width="2.5" marker-end="url(#arrow)"/>
+                                        <polygon points="275,17 265,12 265,22" fill="#FF5500"/>
+                                    </g>
+
+                                    <!-- Response Stream (Bottom Arrow) -->
+                                    <g transform="translate(0, 65)">
+                                        <line x1="275" y1="17" x2="0" y2="17" stroke="#0284C7" stroke-width="2.5"/>
+                                        <polygon points="0,17 10,12 10,22" fill="#0284C7"/>
+                                        <rect x="25" y="0" width="230" height="34" rx="17" fill="#F0F9FF" stroke="#0284C7" stroke-width="2"/>
+                                        <text x="140" y="21" font-size="11.5" font-weight="900" fill="#0369A1" text-anchor="middle">إعادة البيانات المطلوبة (الاستجابة Response)</text>
+                                    </g>
+                                </g>
+
+                                <!-- Server Box (Right) -->
+                                <g transform="translate(540, 25)">
+                                    <rect x="0" y="0" width="180" height="150" rx="14" fill="#FFFFFF" stroke="#0B1B48" stroke-width="2.5"/>
+                                    <rect x="15" y="14" width="150" height="26" rx="6" fill="#F1F5F9"/>
+                                    <text x="90" y="32" font-size="13" font-weight="900" fill="#0B1B48" text-anchor="middle">الخادم (Server)</text>
+                                    
+                                    <!-- Server rack sketch -->
+                                    <rect x="50" y="52" width="80" height="58" rx="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="1.8"/>
+                                    <circle cx="65" cy="65" r="3" fill="#10B981"/>
+                                    <line x1="75" y1="65" x2="115" y2="65" stroke="#0284C7" stroke-width="2"/>
+                                    <circle cx="65" cy="80" r="3" fill="#10B981"/>
+                                    <line x1="75" y1="80" x2="115" y2="80" stroke="#0284C7" stroke-width="2"/>
+                                    <circle cx="65" cy="95" r="3" fill="#10B981"/>
+                                    <line x1="75" y1="95" x2="115" y2="95" stroke="#0284C7" stroke-width="2"/>
+
+                                    <text x="90" y="128" font-size="11" font-weight="800" fill="#0B1B48" text-anchor="middle">خادم الويب / خادم التطبيقات</text>
+                                    <text x="90" y="143" font-size="9.5" font-weight="700" fill="#64748B" text-anchor="middle">(يعالج الطلبات ويعيد الاستجابات)</text>
+                                </g>
+                            </svg>
+                        </div>
+                        <p class="text-xs text-slate-600 text-center font-bold mt-2">
+                            الشكل 3.2.1: يطلب العميل البيانات أو المعالجة، ويعالج الخادم الطلب ويعيد استجابة مطابقة واحدة عبر قواعد بروتوكول HTTP.
+                        </p>
+                    </div>
+
+                    <!-- بطاقتان تعريفيتان لدوري العميل والخادم -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="p-4 rounded-xl bg-orange-50/60 border border-orange-200 space-y-2 text-right">
+                            <div class="w-10 h-10 rounded-xl bg-orange-100 text-beschool-orange flex items-center justify-center text-lg font-black">
+                                <i class="fa-solid fa-desktop"></i>
+                            </div>
+                            <strong class="text-beschool-navy font-black text-sm block">1. العميل (Client):</strong>
+                            <p class="text-slate-600 leading-relaxed">
+                                برنامج أو جهاز يرسل طلباً إلى خدمة أخرى (مثل متصفح Google Chrome، أو تطبيق الهاتف المحمول)؛ يبدأ هو دائماً عملية الاتصال بطلب صفحة أو بيانات أو تنفيذ عملية.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-blue-50/60 border border-blue-200 space-y-2 text-right">
+                            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg font-black">
+                                <i class="fa-solid fa-server"></i>
+                            </div>
+                            <strong class="text-beschool-navy font-black text-sm block">2. الخادم (Server):</strong>
+                            <p class="text-slate-600 leading-relaxed">
+                                الجانب الذي يستقبل الطلبات من العملاء عبر الشبكة، ويعالجها وفق قواعد التطبيق وقاعدة البيانات، ثم يعيد استجابة جاهزة تتضمن النتيجة أو المحتوى المطلوب.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المحور الثاني: بروتوكول HTTP مقابل HTTPS ومصافحة TLS (ص 58 - 59) -->
+                <div class="bg-white rounded-2xl p-6 border border-beschool-border shadow-xs space-y-5">
+                    <div class="border-b border-beschool-border pb-3 flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-black bg-beschool-navy text-white px-2.5 py-0.5 rounded-md">المحور الثاني</span>
+                            <h3 class="text-lg sm:text-xl font-black text-beschool-navy mt-1">البروتوكول الناقل: الفرق بين HTTP و HTTPS الآمن</h3>
+                        </div>
+                        <span class="text-xs font-bold text-beschool-muted">كتاب الوزارة ص 58 و 59</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs sm:text-sm">
+                        <!-- HTTP Regular -->
+                        <div class="p-5 rounded-2xl bg-rose-50/60 border-2 border-rose-200 space-y-3 text-right">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-black bg-rose-200 text-rose-900 px-2 py-0.5 rounded">غير آمن (غير مشفر)</span>
+                                <i class="fa-solid fa-lock-open text-rose-600 text-lg"></i>
+                            </div>
+                            <h4 class="font-black text-beschool-navy text-sm sm:text-base">1. بروتوكول HTTP (HyperText Transfer Protocol)</h4>
+                            <p class="text-slate-600 leading-relaxed text-xs">
+                                بروتوكول نقل النص التشعبي المستخدم لتبادل الرسائل والصفحات بين العميل والخادم. عيبه القاتل: تنتقل البيانات فيه كنص واضح (Plaintext) غير مشفر، مما يتيح لأي متجسس على الشبكة قراءة كلمات المرور والبيانات الحساسة أو تعديلها أثناء النقل!
+                            </p>
+                        </div>
+
+                        <!-- HTTPS Secure -->
+                        <div class="p-5 rounded-2xl bg-emerald-50/60 border-2 border-emerald-200 space-y-3 text-right">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-black bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded">آمن ومشفر بالكامل</span>
+                                <i class="fa-solid fa-lock text-emerald-600 text-lg"></i>
+                            </div>
+                            <h4 class="font-black text-beschool-navy text-sm sm:text-base">2. بروتوكول HTTPS (HTTP Secure)</h4>
+                            <p class="text-slate-600 leading-relaxed text-xs">
+                                استخدام بروتوكول HTTP عبر اتصال <strong>TLS (Transport Layer Security)</strong> آمن ومؤمَّن. يضمن: <strong>(1) سرية الاتصال</strong> (تشفير المحتوى)، <strong>(2) سلامة البيانات</strong> (اكتشاف أي تلاعب أو تعديل)، و <strong>(3) مصادقة الخادم</strong> للتأكد من هوية الموقع الحقيقي.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- صندوق توضيح سؤال توقف وفكر ص 59 -->
+                    <div class="p-4 rounded-xl bg-orange-50/70 border border-orange-200 text-xs text-beschool-navy space-y-1.5 text-right">
+                        <strong class="font-black text-beschool-orange block flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>توقف وفكر (ص 59): لماذا يجب أن تستخدم صفحة تسجيل الدخول HTTPS بدلاً من HTTP العادي؟</span>
+                        </strong>
+                        <p class="text-slate-700 leading-relaxed">
+                            لأن صفحة تسجيل الدخول تستقبل بيانات اعتماد حساسة وسرية (اسم المستخدم وكلمة المرور)؛ فإذا استُخدم HTTP العادي، ستسافر كلمة المرور مكشوفة ويستطيع أي متجسس على شبكة Wi-Fi أو مسار الإنترنت قراءتها وسرقة الحساب فوراً. بينما يشفر اتصال HTTPS المدعوم بـ TLS كلمة المرور ويمنع قراءتها أو التلاعب بها.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- المحور الثالث: أساليب الطلب (GET vs POST) ومحاكي فحص الحزم (ص 59) -->
+                <div class="bg-white rounded-2xl p-6 border border-beschool-border shadow-xs space-y-5">
+                    <div class="border-b border-beschool-border pb-3 flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-black bg-beschool-navy text-white px-2.5 py-0.5 rounded-md">المحور الثالث</span>
+                            <h3 class="text-lg sm:text-xl font-black text-beschool-navy mt-1">أساليب طلب HTTP: المقارنة المعيارية بين GET و POST</h3>
+                        </div>
+                        <span class="text-xs font-bold text-beschool-muted">كتاب الوزارة ص 59</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs sm:text-sm">
+                        <!-- GET Method -->
+                        <div class="p-5 rounded-2xl bg-blue-50/50 border border-blue-200 space-y-3 text-right">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-black bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-md font-mono">طريقة GET</span>
+                                <i class="fa-solid fa-magnifying-glass text-blue-600 text-lg"></i>
+                            </div>
+                            <strong class="font-black text-beschool-navy text-sm block">طلب مورد أو بيانات من الخادم</strong>
+                            <p class="text-slate-600 leading-relaxed text-xs">
+                                تُستخدم عادةً عندما يريد العميل <strong>استرجاع أو قراءة بيانات</strong> دون إحداث تغيير دائم على الخادم (مثل: عرض صفحة ويب، تصفح مقال، أو استرجاع نتائج البحث عن منتج). تظهر معايير البحث غالباً في شريط العنوان (URL).
+                            </p>
+                        </div>
+
+                        <!-- POST Method -->
+                        <div class="p-5 rounded-2xl bg-orange-50/50 border border-orange-200 space-y-3 text-right">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-black bg-orange-100 text-beschool-orange px-2.5 py-0.5 rounded-md font-mono">طريقة POST</span>
+                                <i class="fa-solid fa-paper-plane text-beschool-orange text-lg"></i>
+                            </div>
+                            <strong class="font-black text-beschool-navy text-sm block">إرسال بيانات ليعالجها الخادم</strong>
+                            <p class="text-slate-600 leading-relaxed text-xs">
+                                تُستخدم عادةً عندما يرسل العميل <strong>بيانات جديدة أو حساسة ليعالجها الخادم أو يحفظها في قاعدة البيانات</strong> (مثل: إرسال اسم المستخدم وكلمة المرور في تسجيل الدخول، إرسال تفاصيل بطاقة الدفع، أو إرسال محتويات نموذج تواصل). ترسل البيانات داخل جسم الطلب (Request Body) وليس في الرابط.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- محاكي أسلوبي GET و POST التفاعلي -->
+                    <div class="p-5 rounded-2xl bg-slate-50 border border-beschool-border space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                            <span class="text-xs font-black text-beschool-navy flex items-center gap-1.5">
+                                <i class="fa-solid fa-sliders text-beschool-orange"></i>
+                                <span>محاكي إرسال طلبات الويب (جرب الأسلوبين واكتشف مسار البيانات):</span>
+                            </span>
+                            <span class="text-[11px] font-mono font-bold text-beschool-orange" id="reqMethodBadge">الأسلوب المختار: GET</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <button onclick="simulateRequestMethod('get')" id="btnSimGet" class="p-3.5 rounded-xl border-2 border-beschool-orange bg-orange-50 text-right space-y-1 transition">
+                                <strong class="block text-beschool-navy font-black">1. إرسال طلب تصفح وبحث (GET)</strong>
+                                <span class="text-[11px] text-slate-500">طلب عرض صفحة المنتجات أو نتائج البحث</span>
+                            </button>
+                            <button onclick="simulateRequestMethod('post')" id="btnSimPost" class="p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-right space-y-1 transition">
+                                <strong class="block text-beschool-navy font-black">2. إرسال نموذج تسجيل الدخول (POST)</strong>
+                                <span class="text-[11px] text-slate-500">إرسال كلمة المرور وبيانات الحساب للمعالجة</span>
+                            </button>
+                        </div>
+
+                        <!-- Card Display for Simulator -->
+                        <div id="reqSimCard" class="bg-white p-4 rounded-xl border border-slate-200 space-y-2 text-right">
+                            <div class="flex items-center justify-between">
+                                <h5 id="reqSimTitle" class="text-xs sm:text-sm font-black text-blue-900">طبيعة الطلب: GET /search?item=shoes</h5>
+                                <span id="reqSimTarget" class="text-[10px] font-mono font-black bg-blue-100 text-blue-800 px-2 py-0.5 rounded">استرجاع بيانات</span>
+                            </div>
+                            <p id="reqSimDesc" class="text-xs text-slate-600 leading-relaxed">
+                                يرسل المتصفح طلباً لقراءة قائمة المنتجات. البيانات تطلب مورداً ولا تحدث تعديلاً في قاعدة البيانات، وتظهر المعاملات في رابط العنوان.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المحور الرابع: رموز حالة HTTP ومحاكي الرموز (200, 404, 500) (ص 59) -->
+                <div class="bg-white rounded-2xl p-6 border border-beschool-border shadow-xs space-y-5">
+                    <div class="border-b border-beschool-border pb-3 flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-black bg-beschool-navy text-white px-2.5 py-0.5 rounded-md">المحور الرابع</span>
+                            <h3 class="text-lg sm:text-xl font-black text-beschool-navy mt-1">رموز حالة HTTP (HTTP Status Codes): لغة تقارير الخادم</h3>
+                        </div>
+                        <span class="text-xs font-bold text-beschool-muted">كتاب الوزارة ص 59</span>
+                    </div>
+
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        تتضمن الاستجابات المرسلة من الخادم إلى العميل رقماً مكوناً من ثلاثة أرقام يشير إلى نتيجة المعالجة. يسمى هذا الرقم <strong>رمز حالة HTTP</strong>، ويساعد المتصفح والمستخدم على معرفة ما إذا كان الطلب قد نجح أو أين وقع الخطأ بالتحديد.
+                    </p>
+
+                    <!-- 3 Status Codes Cards Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <!-- 200 OK -->
+                        <div class="p-4 rounded-xl bg-emerald-50/70 border-2 border-emerald-300 space-y-2 text-right">
+                            <div class="flex items-center justify-between">
+                                <span class="text-base font-black text-emerald-700 font-mono">200 OK</span>
+                                <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
+                            </div>
+                            <strong class="text-beschool-navy font-black text-sm block">نجاح (Success)</strong>
+                            <p class="text-slate-600 leading-relaxed">
+                                تمت معالجة الطلب بنجاح تام، وأعاد الخادم الصفحة أو البيانات المطلوبة إلى المتصفح لعرضها.
+                            </p>
+                        </div>
+
+                        <!-- 404 Not Found -->
+                        <div class="p-4 rounded-xl bg-amber-50/70 border-2 border-amber-300 space-y-2 text-right">
+                            <div class="flex items-center justify-between">
+                                <span class="text-base font-black text-amber-700 font-mono">404 Not Found</span>
+                                <i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg"></i>
+                            </div>
+                            <strong class="text-beschool-navy font-black text-sm block">المورد غير موجود</strong>
+                            <p class="text-slate-600 leading-relaxed">
+                                المورد أو الصفحة المطلوبة غير موجودة بهذا العنوان (خطأ في جانب العميل ككتابة رابط خاطئ أو صفحة محذوفة).
+                            </p>
+                        </div>
+
+                        <!-- 500 Internal Server Error -->
+                        <div class="p-4 rounded-xl bg-rose-50/70 border-2 border-rose-300 space-y-2 text-right">
+                            <div class="flex items-center justify-between">
+                                <span class="text-base font-black text-rose-700 font-mono">500 Server Error</span>
+                                <i class="fa-solid fa-circle-xmark text-rose-600 text-lg"></i>
+                            </div>
+                            <strong class="text-beschool-navy font-black text-sm block">خطأ داخلي في الخادم</strong>
+                            <p class="text-slate-600 leading-relaxed">
+                                حدثت مشكلة أو عطل داخلي في جانب الخادم منعه من إكمال الطلب (ولا يحدد الرمز وحده السبب التفصيلي للعطل).
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- سؤال توقف وفكر ص 60 -->
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-beschool-navy space-y-1.5 text-right">
+                        <strong class="font-black text-beschool-navy block flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-question text-beschool-orange"></i>
+                            <span>توقف وفكر (ص 60): إذا استقبل المتصفح رمز حالة 404 HTTP، ماذا يجب أن يخبر المستخدم - وأي جانب كانت به المشكلة؟</span>
+                        </strong>
+                        <p class="text-slate-700 leading-relaxed">
+                            <strong>ماذا يخبر المستخدم:</strong> يخبره بأن الصفحة أو الرابط المطلوب غير موجود (مثل: "عذراً، الصفحة غير موجودة"). <br>
+                            <strong>أي جانب كانت به المشكلة:</strong> المشكلة تكون في <strong>جانب العميل (Client side)</strong> لأنه طلب عنواناً أو مورداً غير متاح أو كتب الرابط خطأ، بخلاف رموز فئة الـ 500 التي تقع فيها المشكلة في جانب الخادم (Server side).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- المحور الخامس: واجهات برمجة التطبيقات (API) وصيغة البيانات المهيكلة (JSON) (ص 59 و 61) -->
+                <div class="bg-white rounded-2xl p-6 border border-beschool-border shadow-xs space-y-5">
+                    <div class="border-b border-beschool-border pb-3 flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-black bg-beschool-navy text-white px-2.5 py-0.5 rounded-md">المحور الخامس</span>
+                            <h3 class="text-lg sm:text-xl font-black text-beschool-navy mt-1">واجهة برمجة التطبيقات (API) وصيغة تبادل البيانات (JSON)</h3>
+                        </div>
+                        <span class="text-xs font-bold text-beschool-muted">كتاب الوزارة ص 59 و 61</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs sm:text-sm">
+                        <!-- API Explanation -->
+                        <div class="p-5 rounded-2xl bg-purple-50/60 border border-purple-200 space-y-3 text-right">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-black bg-purple-100 text-purple-800 px-2.5 py-0.5 rounded-md font-mono">API</span>
+                                <i class="fa-solid fa-plug text-purple-600 text-lg"></i>
+                            </div>
+                            <strong class="font-black text-beschool-navy text-sm block">واجهة برمجة التطبيقات (Application Programming Interface)</strong>
+                            <p class="text-slate-600 leading-relaxed text-xs">
+                                مجموعة قواعد واضحة ومحددة تسمح لبرنامج أو تطبيق بطلب بيانات أو وظائف من برنامج أو خدمة أخرى (مثل قيام تطبيق مدرسة بطلب بيانات الطقس من موقع الأرصاد). تعمل كوسيط وعقد رقمي بين الأنظمة المختلفة.
+                            </p>
+                        </div>
+
+                        <!-- JSON Explanation -->
+                        <div class="p-5 rounded-2xl bg-emerald-50/60 border border-emerald-200 space-y-3 text-right">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-black bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-md font-mono">JSON</span>
+                                <i class="fa-solid fa-code text-emerald-600 text-lg"></i>
+                            </div>
+                            <strong class="font-black text-beschool-navy text-sm block">صيغة كائنات جافاسكريبت (JavaScript Object Notation)</strong>
+                            <p class="text-slate-600 leading-relaxed text-xs">
+                                صيغة نصية شائعة وخفيفة لتمثيل وتبادل البيانات المهيكلة بين العميل والخادم؛ تتميز بأنها سهلة القراءة للبشر وسهلة التحليل للحواسيب، وتعتمد على أزواج من <strong>المفاتيح والقيم (Key-Value Pairs)</strong> والمصفوفات وتدعمها لغات برمجية كثيرة.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- صندوق تحليل بيانات JSON من كتاب الوزارة ص 61 -->
+                    <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 text-right">
+                        <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                            <span class="text-xs font-black text-beschool-navy flex items-center gap-1.5">
+                                <i class="fa-solid fa-file-code text-beschool-orange"></i>
+                                <span>تدريب تطبيقي: اقرأ بيانات JSON (كتاب الوزارة ص 61)</span>
+                            </span>
+                            <span class="text-[10px] font-mono text-slate-500">Key : Value</span>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs text-left" dir="ltr">
+<pre>{
+  "city": "Cairo",
+  "temperature": 31
+}</pre>
+                        </div>
+                        <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs text-slate-700 leading-relaxed">
+                            <strong>التحليل المنهجي المعتمد:</strong>
+                            يتكون كائن JSON أعلاه من مفتاحين وقيمتين؛ المفتاح الأول هو <code class="text-beschool-orange font-bold font-mono">"city"</code> وقيمته النصية المقابلة هي <code class="text-emerald-700 font-bold font-mono">"Cairo"</code>، والمفتاح الثاني هو <code class="text-beschool-orange font-bold font-mono">"temperature"</code> وقيمته العددية المقابلة هي <code class="text-emerald-700 font-bold font-mono">31</code>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- 2. تبويب المراجعة (REVISION TAB) -->
+            <!-- ========================================================================= -->
+            <div id="pane-revision" class="hidden space-y-6">
+                <!-- بطاقات المفاهيم 3D -->
+                <div class="bg-white rounded-2xl p-6 border border-beschool-border shadow-xs space-y-5">
+                    <div class="border-b border-beschool-border pb-3 flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-black bg-beschool-navy text-white px-2.5 py-0.5 rounded-md">أداة الاستذكار السريع</span>
+                            <h3 class="text-lg sm:text-xl font-black text-beschool-navy mt-1">بطاقات مفاهيم الدرس 3-2 (انقر لقلب البطاقة)</h3>
+                        </div>
+                        <span class="text-xs font-bold text-beschool-muted">6 بطاقات امتحانية معتمدة</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Card 1 -->
+                        <div class="flashcard perspective-1000 h-44 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                            <div class="flashcard-inner relative w-full h-full transform-style-3d">
+                                <div class="backface-hidden absolute inset-0 bg-slate-50 rounded-2xl p-5 border border-beschool-border flex flex-col items-center justify-center text-center shadow-xs">
+                                    <span class="text-[10px] font-black bg-orange-100 text-beschool-orange px-2 py-0.5 rounded-full mb-2">المصطلح 1</span>
+                                    <h4 class="font-extrabold text-base text-beschool-navy">العميل<br><span class="text-xs font-mono text-beschool-muted">Client</span></h4>
+                                    <span class="text-[11px] text-beschool-muted mt-3"><i class="fa-solid fa-arrows-rotate ml-1"></i> انقر لرؤية التعريف</span>
+                                </div>
+                                <div class="backface-hidden rotate-y-180 absolute inset-0 bg-beschool-navy text-white rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+                                    <p class="text-xs leading-relaxed text-slate-200">
+                                        البرنامج أو الجهاز الذي يطلب البيانات أو المعالجة من الخادم؛ ومن أمثلته متصفح الويب وتطبيقات الهواتف الذكية.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="flashcard perspective-1000 h-44 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                            <div class="flashcard-inner relative w-full h-full transform-style-3d">
+                                <div class="backface-hidden absolute inset-0 bg-slate-50 rounded-2xl p-5 border border-beschool-border flex flex-col items-center justify-center text-center shadow-xs">
+                                    <span class="text-[10px] font-black bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full mb-2">المصطلح 2</span>
+                                    <h4 class="font-extrabold text-base text-beschool-navy">الخادم<br><span class="text-xs font-mono text-beschool-muted">Server</span></h4>
+                                    <span class="text-[11px] text-beschool-muted mt-3"><i class="fa-solid fa-arrows-rotate ml-1"></i> انقر لرؤية التعريف</span>
+                                </div>
+                                <div class="backface-hidden rotate-y-180 absolute inset-0 bg-blue-900 text-white rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+                                    <p class="text-xs leading-relaxed text-slate-200">
+                                        الجانب الذي يستقبل الطلبات من العملاء عبر الشبكة، ويعالجها ويطبق قواعد العمل ثم يعيد الاستجابات المناسبة.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="flashcard perspective-1000 h-44 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                            <div class="flashcard-inner relative w-full h-full transform-style-3d">
+                                <div class="backface-hidden absolute inset-0 bg-slate-50 rounded-2xl p-5 border border-beschool-border flex flex-col items-center justify-center text-center shadow-xs">
+                                    <span class="text-[10px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full mb-2">المصطلح 3</span>
+                                    <h4 class="font-extrabold text-base text-beschool-navy">بروتوكول HTTPS<br><span class="text-xs font-mono text-beschool-muted">HTTP Secure</span></h4>
+                                    <span class="text-[11px] text-beschool-muted mt-3"><i class="fa-solid fa-arrows-rotate ml-1"></i> انقر لرؤية التعريف</span>
+                                </div>
+                                <div class="backface-hidden rotate-y-180 absolute inset-0 bg-emerald-900 text-white rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+                                    <p class="text-xs leading-relaxed text-slate-200">
+                                        استخدام بروتوكول HTTP عبر اتصال TLS آمن لحماية سرية البيانات وسلامتها أثناء النقل ومصادقة الخادم.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="flashcard perspective-1000 h-44 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                            <div class="flashcard-inner relative w-full h-full transform-style-3d">
+                                <div class="backface-hidden absolute inset-0 bg-slate-50 rounded-2xl p-5 border border-beschool-border flex flex-col items-center justify-center text-center shadow-xs">
+                                    <span class="text-[10px] font-black bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full mb-2">المصطلح 4</span>
+                                    <h4 class="font-extrabold text-base text-beschool-navy">أسلوبا GET و POST<br><span class="text-xs font-mono text-beschool-muted">HTTP Methods</span></h4>
+                                    <span class="text-[11px] text-beschool-muted mt-3"><i class="fa-solid fa-arrows-rotate ml-1"></i> انقر لرؤية التعريف</span>
+                                </div>
+                                <div class="backface-hidden rotate-y-180 absolute inset-0 bg-purple-900 text-white rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+                                    <p class="text-xs leading-relaxed text-slate-200">
+                                        GET لطلب مورد أو استرجاع بيانات من الخادم، و POST لإرسال بيانات جديدة أو حساسة ليعالجها الخادم.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 5 -->
+                        <div class="flashcard perspective-1000 h-44 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                            <div class="flashcard-inner relative w-full h-full transform-style-3d">
+                                <div class="backface-hidden absolute inset-0 bg-slate-50 rounded-2xl p-5 border border-beschool-border flex flex-col items-center justify-center text-center shadow-xs">
+                                    <span class="text-[10px] font-black bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full mb-2">المصطلح 5</span>
+                                    <h4 class="font-extrabold text-base text-beschool-navy">رمز حالة HTTP<br><span class="text-xs font-mono text-beschool-muted">HTTP Status Code</span></h4>
+                                    <span class="text-[11px] text-beschool-muted mt-3"><i class="fa-solid fa-arrows-rotate ml-1"></i> انقر لرؤية التعريف</span>
+                                </div>
+                                <div class="backface-hidden rotate-y-180 absolute inset-0 bg-amber-900 text-white rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+                                    <p class="text-xs leading-relaxed text-slate-200">
+                                        رقم ثلاثي يوضح نتيجة معالجة الطلب؛ 200 تعني نجاح، 404 تعني المورد غير موجود، و 500 تعني خطأ في الخادم.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 6 -->
+                        <div class="flashcard perspective-1000 h-44 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                            <div class="flashcard-inner relative w-full h-full transform-style-3d">
+                                <div class="backface-hidden absolute inset-0 bg-slate-50 rounded-2xl p-5 border border-beschool-border flex flex-col items-center justify-center text-center shadow-xs">
+                                    <span class="text-[10px] font-black bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full mb-2">المصطلح 6</span>
+                                    <h4 class="font-extrabold text-base text-beschool-navy">واجهة API وصيغة JSON<br><span class="text-xs font-mono text-beschool-muted">API & JSON</span></h4>
+                                    <span class="text-[11px] text-beschool-muted mt-3"><i class="fa-solid fa-arrows-rotate ml-1"></i> انقر لرؤية التعريف</span>
+                                </div>
+                                <div class="backface-hidden rotate-y-180 absolute inset-0 bg-beschool-orange text-white rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+                                    <p class="text-xs leading-relaxed text-white">
+                                        API تتيح للبرامج تبادل البيانات، و JSON صيغة نصية مهيكلة خفيفة سهلة القراءة لتمثيل تلك البيانات.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- خلاصة ليلة الامتحان -->
+                <div class="bg-white rounded-2xl p-6 sm:p-8 border border-beschool-border shadow-xs space-y-6">
+                    <div class="border-b border-beschool-border pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <span class="text-[11px] font-black bg-orange-100 text-beschool-orange px-2.5 py-0.5 rounded-md">خلاصة ليلة الامتحان</span>
+                            <h3 class="text-lg sm:text-xl font-black text-beschool-navy mt-1">تذكر دائماً (أهم مفاتيح الدرس 3-2)</h3>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="readSummaryAloudL32()" id="ttsBtn32" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-orange-50 hover:text-beschool-orange text-beschool-navy text-xs font-bold transition flex items-center gap-1.5">
+                                <i id="ttsIcon32" class="fa-solid fa-volume-high"></i>
+                                <span id="ttsLabel32">استمع صوتياً للملخص (مصري سريع)</span>
+                            </button>
+                            <button onclick="copySummaryTextL32()" class="px-3.5 py-2 rounded-xl bg-beschool-navy hover:bg-beschool-navyLight text-white text-xs font-bold transition flex items-center gap-1.5">
+                                <i class="fa-regular fa-copy"></i>
+                                <span id="copyBtnLabel32">نسخ الملخص</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+                        <div class="p-4 rounded-xl bg-slate-50 border border-beschool-border space-y-2">
+                            <div class="flex items-center gap-2 text-beschool-orange font-black">
+                                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                <span>1. دورة الطلب والاستجابة ورموز الحالة:</span>
+                            </div>
+                            <p class="text-beschool-slate leading-relaxed">
+                                يبدأ العميل (المتصفح) بإرسال طلب HTTP بأسلوب GET (لجلب بيانات) أو POST (لإرسال بيانات). يعالج الخادم الطلب ويعيد استجابة برمز حالة: 200 (تم بنجاح)، 404 (المورد غير موجود)، أو 500 (خطأ في الخادم).
+                            </p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-50 border border-beschool-border space-y-2">
+                            <div class="flex items-center gap-2 text-beschool-orange font-black">
+                                <i class="fa-solid fa-code"></i>
+                                <span>2. أمان HTTPS وتبادل البيانات بـ JSON:</span>
+                            </div>
+                            <p class="text-beschool-slate leading-relaxed">
+                                اتصال HTTPS يشفر البيانات بـ TLS لحمايتها من المتنصتين. وتتيح واجهات API للبرامج تبادل البيانات بسهولة، بصيغة JSON الخفيفة المعتمدة على أزواج المفاتيح والقيم.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- 3. تبويب حل تمارين الكتاب (BOOK SOLUTIONS TAB) -->
+            <!-- ========================================================================= -->
+            <div id="pane-book-solutions" class="space-y-6 hidden">
+                <div class="bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-2xl p-6 sm:p-7 shadow-xs space-y-2 text-right">
+                    <div class="inline-flex items-center gap-2 bg-white/20 px-3 py-1 rounded-lg text-xs font-black">
+                        <i class="fa-solid fa-award"></i>
+                        <span>حلول نموذجية وشاملة لكافة تدريبات الدرس 3-2</span>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-black">حل جميع تدريبات وأسئلة كتاب الوزارة المعتمدة</h2>
+                    <p class="text-xs sm:text-sm text-orange-50 font-medium leading-relaxed">
+                        إجابات مفسرة ومدعومة بالتعليلات المنهجية: توقف وفكر ص 59 و 60، المثال المحلول ص 60، سؤال نمط الامتحان (6 درجات) ص 60، تدرب 1 و 2 ص 60 و 61، ورشة فكر كمهندس ص 61، اقرأ البيانات JSON ص 61، طبق ما تعلمته ص 61، والتمارين الختامية ص 62.
+                    </p>
+                </div>
+
+                <!-- توقف وفكر ص 59 و 60 -->
+                <div class="bg-white rounded-2xl p-6 border border-beschool-border shadow-xs space-y-4">
+                    <span class="text-xs font-black bg-blue-100 text-blue-800 px-3 py-1 rounded-lg">حل أسئلة «توقف وفكر» (ص 59 و 60)</span>
+                    <div class="space-y-3 text-xs sm:text-sm">
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-slate-700">
+                            <p class="font-bold text-beschool-navy">السؤال 1 (ص 59): لماذا يجب أن تستخدم صفحة تسجيل الدخول HTTPS بدلاً من HTTP العادي؟</p>
+                            <p class="text-emerald-900 bg-emerald-50 p-2.5 rounded-lg border border-emerald-200 font-bold">
+                                الإجابة: لأن صفحة تسجيل الدخول ترسل بيانات حساسة وسرية للغاية (اسم المستخدم وكلمة المرور)؛ فإذا استُخدم HTTP العادي ستنتقل البيانات كنص صريح مكشوف يسهل اعتراضه وسرقته بواسطة المتنصتين على الشبكة، بينما يشفر اتصال HTTPS البيانات بـ TLS ويحمي سريتها وسلامتها أثناء النقل.
+                            </p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-slate-700">
+                            <p class="font-bold text-beschool-navy">السؤال 2 (ص 60): إذا استقبل المتصفح رمز حالة 404 HTTP، ماذا يجب أن يخبر المستخدم - وأي جانب كانت به المشكلة؟</p>
+                            <p class="text-emerald-900 bg-emerald-50 p-2.5 rounded-lg border border-emerald-200 font-bold">
+                                الإجابة: يجب أن يخبر المستخدم بأن الصفحة أو المورد المطلوب غير موجود بهذا العنوان (مثل: "عذراً، الصفحة غير موجودة"). والمشكلة تكون في <strong>جانب العميل (Client side)</strong> لأنه طلب عنوان URL خاطئاً أو صفحة تم نقلها أو حذفها.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المثال المحلول ص 60 -->
+                <div class="bg-white rounded-2xl p-6 border border-beschool-border shadow-xs space-y-4">
+                    <span class="text-xs font-black bg-purple-100 text-purple-800 px-3 py-1 rounded-lg">حل «المثال المحلول» (ص 60)</span>
+                    <div class="space-y-3 text-xs sm:text-sm">
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                            <strong class="text-beschool-navy block font-black">1. ضع علامة (✓) أو (✗) مع التفسير:</strong>
+                            <p>أ) العميل هو الجانب الذي يطلب البيانات أو المعالجة من الخادم، والخادم هو الجانب الذي يعيد الاستجابة: <strong class="text-emerald-700">(✓) صواب</strong>.</p>
+                            <p>ب) HTTPS هو استخدام HTTP عبر اتصال محمي بـ TLS: <strong class="text-emerald-700">(✓) صواب</strong>.</p>
+                            <p>ج) أسلوب GET مخصص لإرسال البيانات إلى الخادم: <strong class="text-rose-700">(✗) خطأ</strong> (التصحيح: أسلوب GET مخصص لطلب واسترجاع البيانات من الخادم، بينما POST هو المخصص لإرسال البيانات ليعالجها الخادم).</p>
+                            <p>د) رمز حالة 404 HTTP يشير إلى أن المورد المطلوب غير موجود: <strong class="text-emerald-700">(✓) صواب</strong>.</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                            <strong class="text-beschool-navy block font-black">2. المطابقة:</strong>
+                            <p>• 1. بروتوكول اتصال لتبادل البيانات بين متصفحات الويب والخوادم: <strong>HTTP (أ)</strong>.</p>
+                            <p>• 2. واجهة أو مجموعة قواعد محددة تتيح لبرنامج طلب بيانات أو وظائف من برنامج آخر: <strong>API (ب)</strong>.</p>
+                            <p>• 3. بروتوكول اتصال يضيف تشفيراً إلى HTTP: <strong>HTTPS (جـ)</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- سؤال نمط الامتحان المقالي 6 درجات ص 60 -->
+                <div class="bg-white rounded-2xl p-6 border-2 border-beschool-orange shadow-xs space-y-4">
+                    <div class="flex items-center justify-between border-b border-beschool-border pb-2">
+                        <span class="text-xs font-black bg-beschool-orange text-white px-3 py-1 rounded-lg">سؤال نمط الامتحان المقالي [6 درجات] (ص 60)</span>
+                        <span class="text-xs font-bold text-beschool-navy">سلم توزيع الدرجات المعتمد</span>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-orange-50/70 border border-orange-200 font-bold text-beschool-navy text-xs sm:text-sm">
+                        نص السؤال: «اشرح خطوة بخطوة ما يحدث عندما يطلب المتصفح صفحة ويب ويستجيب الخادم [6 درجات] (أشر إلى العميل، الطلب، طريقة طلب HTTP، الاستجابة، ورمز حالة HTTP).»
+                    </div>
+                    <div class="space-y-2 text-xs sm:text-sm">
+                        <div class="p-2.5 rounded-lg bg-white border border-slate-200">
+                            <strong>1. إرسال الطلب بواسطة العميل (الخطوة الأولى) [درجتان]:</strong> يبدأ العميل (متصفح الويب) بإنشاء طلب اتصال HTTP/HTTPS نحو الخادم، ويحدد فيه المورد المطلوب وطريقة الطلب المناسبة؛ مثل طريقة <strong>GET</strong> إذا كان يطلب عرض صفحة ويب عادية، ويرسل الطلب عبر الشبكة.
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-white border border-slate-200">
+                            <strong>2. معالجة الخادم للطلب (الخطوة الثانية) [درجتان]:</strong> يستقبل الخادم (Server) الطلب، ويفحص طريقة الطلب وعنوان المورد، ويطبق قواعد المعالجة والتحقق، ويتصل بقاعدة البيانات إذا لزم الأمر لاسترجاع محتوى الصفحة المطلوبة.
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-white border border-slate-200">
+                            <strong>3. إرجاع الاستجابة ورمز الحالة (الخطوة الثالثة) [درجتان]:</strong> يعيد الخادم حزمة الاستجابة (Response) إلى العميل متضمنة محتوى الصفحة المطلوب مع <strong>رمز حالة HTTP</strong> يوضح نتيجة المعالجة (مثل الرمز 200 إذا نجحت المعالجة، أو 404 إذا كانت الصفحة غير موجودة)، فيقوم المتصفح بقراءة الرمز وعرض الصفحة للمستخدم.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- تدرب 1 و 2 ص 60 و 61 -->
+                <div class="bg-white rounded-2xl p-6 border border-beschool-border shadow-xs space-y-4">
+                    <span class="text-xs font-black bg-emerald-100 text-emerald-800 px-3 py-1 rounded-lg">حل أسئلة «تدرب 1 و 2» (ص 60 و 61)</span>
+                    <div class="space-y-3 text-xs sm:text-sm">
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                            <p>1. المصطلح الخاص بالجانب الذي يطلب البيانات أو المعالجة من الخادم: <strong>العميل (Client)</strong>.</p>
+                            <p>2. المصطلح الخاص بالجانب الذي يستقبل الطلبات ويعالجها ويعيد الاستجابات: <strong>الخادم (Server)</strong>.</p>
+                            <p>3. البروتوكول المستخدم للوصول إلى الويب عبر اتصال TLS آمن: <strong>HTTPS</strong>.</p>
+                            <p>4. المصطلح الخاص بطريقة طلب HTTP لاسترجاع البيانات من الخادم: <strong>GET</strong>.</p>
+                            <p>5. المصطلح الخاص بنظام وقواعد تبادل البيانات بين برمجيات مختلفة: <strong>واجهة برمجة التطبيقات (API)</strong>.</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                            <p>• التركيبة غير المناسبة بين رمز الحالة والمعنى: <strong>(جـ) 500 - تمت معالجة الطلب بنجاح</strong> (لأن 500 تشير إلى خطأ داخلي في الخادم Server Error، بينما 200 هي التي تعني النجاح).</p>
+                            <p>• الخيار الذي يصف واجهة برمجة التطبيقات بأفضل شكل: <strong>(ب) نظام وقواعد لتبادل البيانات بين برمجيات مختلفة</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ورشة فكر كمهندس واقرأ البيانات وطبق ما تعلمته ص 61 -->
+                <div class="bg-white rounded-2xl p-6 border border-beschool-border shadow-xs space-y-4">
+                    <span class="text-xs font-black bg-amber-100 text-amber-900 px-3 py-1 rounded-lg">حل ورشة «فكر كمهندس» وتمرين «اقرأ البيانات» وسؤال «طبق ما تعلمته» (ص 61)</span>
+                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm space-y-2 text-slate-700">
+                        <p class="font-bold text-beschool-navy">قرار فكر كمهندس (تطبيق ويب لمدرسة):</p>
+                        <p><strong>اختيار الأساليب:</strong> (1) تحميل سجل درجات الطالب: أسلوب <strong>GET</strong> (استرجاع بيانات)، (2) إرسال نموذج تسجيل الدخول: أسلوب <strong>POST</strong> (إرسال بيانات سرية ومعالجتها)، (3) طلب الجدول الدراسي من مدرسة أخرى: أسلوب <strong>GET</strong> عبر <strong>واجهة برمجة تطبيقات (API)</strong>. <strong>اختيار البروتوكول:</strong> يجب استخدام <strong>HTTPS</strong> لحماية كلمات المرور والدرجات من التنصت والتلاعب. <strong>التوصية:</strong> نوصي بـ <strong>استخدام HTTPS والأسلوب المناسب لكل إجراء (GET للقراءة و POST للإرسال)</strong> لضمان الأمان والخصوصية وكفاءة الأداء.</p>
+                        
+                        <p class="font-bold text-beschool-navy pt-2">حل تمرين اقرأ البيانات (JSON):</p>
+                        <p>في كائن JSON المعطى: المفتاح الأول هو <strong>"city"</strong> وقيمته المقابلة <strong>"Cairo"</strong>، والمفتاح الثاني هو <strong>"temperature"</strong> وقيمته المقابلة <strong>31</strong>.</p>
+
+                        <p class="font-bold text-beschool-navy pt-2">حل سؤال طبق ما تعلمته (خدمة الطقس عبر API):</p>
+                        <p><strong>طريقة الطلب:</strong> أسلوب <strong>GET</strong> لاسترجاع توقعات اليوم. <strong>سبب استخدام HTTPS:</strong> لضمان سرية الاتصال ومصادقة خادم الأرصاد ومنع التلاعب ببيانات الطقس أثناء النقل. <strong>ميزة استقبال البيانات بصيغة JSON:</strong> صيغة نصية خفيفة وسهلة القراءة والتحليل البرمجي وتدعمها لغات البرمجة بكفاءة عالية.</p>
+                    </div>
+                </div>
+
+                <!-- تمارين ص 62 وفكر وتحد نفسك -->
+                <div class="bg-white rounded-2xl p-6 border border-beschool-border shadow-xs space-y-4">
+                    <span class="text-xs font-black bg-beschool-navy text-white px-3 py-1 rounded-lg">حل التمارين الختامية (ص 62)</span>
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm space-y-2 text-slate-700">
+                        <p><strong>إكمال الفراغات:</strong> يعتمد اتصال الويب على (1: العميل) الذي يرسل طلباً، و (2: الخادم) الذي يعيد استجابة، ويستخدم بروتوكول (3: HTTP)، ويسمى استخدامه عبر اتصال TLS آمن (4: HTTPS).</p>
+                        <p><strong>تحديد أسلوب الطلب:</strong> عرض صفحة ويب (GET) • إرسال معرف وكلمة مرور (POST) • عرض نتائج البحث (GET) • إرسال محتويات نموذج التواصل (POST).</p>
+                        <p><strong>الوصف الأنسب لـ HTTPS:</strong> <strong>(جـ) بروتوكول يستخدم HTTP عبر اتصال محمي بـ TLS</strong>.</p>
+                        <p><strong>فكر وتحدَّ نفسك:</strong> رمز الحالة الذي يساعد أكثر على الفهم هو <strong>404 (لمعرفة أن الرابط مفقود وخطأ في العنوان)</strong> أو <strong>500 (لمعرفة أن العطل في خادم الموقع نفسه)</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- 4. تبويب الاختبار (QUIZ TAB) - 50 سؤالاً تفاعلياً ومحكماً -->
+            <!-- ========================================================================= -->
+            <div id="pane-questions" class="space-y-6 hidden">
+                <div class="max-w-3xl mx-auto bg-white rounded-2xl p-6 sm:p-8 border border-beschool-border shadow-xs space-y-6">
+                    <div class="border-b border-beschool-border pb-4 flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-black bg-orange-100 text-beschool-orange px-2.5 py-0.5 rounded-md">اختبار تفاعلي مصحح ذاتياً</span>
+                            <h3 class="text-lg sm:text-xl font-black text-beschool-navy mt-1">بنك أسئلة الدرس 3-2 (50 سؤالاً تحليلياً ودقيقاً)</h3>
+                        </div>
+                        <div class="text-left font-mono">
+                            <span class="text-xs text-beschool-muted block font-bold">السؤال</span>
+                            <span class="text-base font-black text-beschool-orange">
+                                <span id="activeQIndex">1</span> / <span id="totalQCount">50</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- شريط الانتقال السريع 50 زراً -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-beschool-border">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[11px] font-black text-beschool-slate">
+                                <i class="fa-solid fa-list-check ml-1 text-beschool-orange"></i> الانتقال السريع للأسئلة:
+                            </span>
+                            <span class="text-[10px] text-beschool-muted font-bold" id="quizAnsweredBadge">تمت الإجابة: 0 / 50</span>
+                        </div>
+                        <div id="quickNavGrid" class="grid grid-cols-10 gap-1.5 text-center">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                    <!-- صندوق عرض السؤال النشط -->
+                    <div id="quizContainer" class="space-y-4">
+                        <!-- Injected by JS -->
+                    </div>
+
+                    <!-- أزرار التنقل -->
+                    <div class="pt-4 border-t border-beschool-border flex items-center justify-between gap-2">
+                        <button id="btnPrevQ" onclick="prevQuestion()" class="px-4 py-2 rounded-xl text-xs font-bold text-beschool-slate hover:bg-slate-100 transition hidden">
+                            <i class="fa-solid fa-arrow-right ml-1"></i> السابق
+                        </button>
+                        <div class="flex-1"></div>
+                        <button id="btnNextQ" onclick="nextQuestion()" class="px-6 py-2.5 rounded-xl bg-beschool-orange hover:bg-beschool-orangeDark text-white text-xs sm:text-sm font-black transition flex items-center gap-1.5 shadow-xs">
+                            <span>السؤال التالي</span>
+                            <i class="fa-solid fa-arrow-left mr-1"></i>
+                        </button>
+                    </div>
+
+                    <!-- شاشة النتيجة المتوازنة والموجهة لطلاب عمر 16 سنة -->
+                    <div id="quizScoreboard" class="hidden text-center py-6 space-y-5 bg-slate-50 rounded-2xl border border-beschool-border p-6">
+                        <div id="scoreIconContainer" class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto shadow-sm">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        
+                        <h4 class="text-xl sm:text-2xl font-black text-beschool-navy">اكتمل التقييم بنجاح!</h4>
+                        <p class="text-sm font-black text-beschool-orange">
+                            الطالب: <span id="quizStudentNameDisplay">طالب متميز</span>
+                        </p>
+                        <p id="quizScoreText" class="text-sm font-bold text-beschool-slate">
+                            درجتك المستحقة: 50 من 50
+                        </p>
+
+                        <!-- بطاقة الرسالة التحفيزية الموجهة لعمر 16 سنة -->
+                        <div id="motivationCard" class="max-w-xl mx-auto p-4 sm:p-5 rounded-2xl border text-right space-y-2 shadow-xs transition">
+                            <!-- Dynamic Content by JS -->
+                        </div>
+
+                        <div class="max-w-xl mx-auto bg-white p-3 rounded-xl border border-beschool-border text-xs text-beschool-slate space-y-1">
+                            <p id="quizStatsDetails">صحيحة: 50 | غير صحيحة: 0</p>
+                        </div>
+
+                        <div class="flex flex-wrap justify-center gap-3 pt-2">
+                            <button onclick="resetQuizEngine()" class="px-5 py-2.5 rounded-xl bg-beschool-orange hover:bg-beschool-orangeDark text-white text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-xs">
+                                <i class="fa-solid fa-rotate-right"></i>
+                                <span>إعادة الاختبار بالكامل</span>
+                            </button>
+                            <button onclick="switchNavTab('study')" class="px-5 py-2.5 rounded-xl bg-white border border-beschool-border text-beschool-navy text-xs sm:text-sm font-bold hover:bg-slate-100 transition flex items-center gap-2">
+                                <i class="fa-solid fa-book-open"></i>
+                                <span>مراجعة الشرح</span>
+                            </button>
+                        </div>
+
+                        <!-- قائمة المراجعة التفصيلية لجميع الـ 50 سؤالاً -->
+                        <div class="pt-6 border-t border-beschool-border text-right space-y-4">
+                            <h5 class="text-sm sm:text-base font-black text-beschool-navy flex items-center gap-2">
+                                <i class="fa-solid fa-clipboard-check text-beschool-orange"></i>
+                                <span>مراجعة تفصيلية لجميع الأسئلة الـ 50:</span>
+                            </h5>
+                            <div id="quizReviewList" class="space-y-3">
+                                <!-- Injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="bg-white border-t border-beschool-border py-8 mt-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-5 text-center md:text-right">
+                <div class="flex flex-col items-center md:items-start leading-tight select-none">
+                    <div dir="ltr" class="flex items-baseline font-black text-2xl sm:text-3xl tracking-tight leading-none">
+                        <span class="text-beschool-orange font-black">be</span><span class="text-beschool-orange font-black">;</span><span class="text-beschool-navy font-black">school</span>
+                    </div>
+                    <span class="text-xs sm:text-sm font-black text-beschool-navy mt-1">مدرسة البرمجة</span>
+                    <span class="text-[11px] text-beschool-muted mt-1">الدرس 3-2: طرق اتصال تطبيقات الويب • الصف الثاني الثانوي</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let currentStudentName = "";
+
+        function goToNameEntryScreen() {
+            document.getElementById('screen-landing').classList.add('hidden');
+            const nameScreen = document.getElementById('screen-name-entry');
+            nameScreen.classList.remove('hidden');
+            const input = document.getElementById('studentNameInput');
+            if (input) input.focus();
+        }
+
+        function goToLandingScreen() {
+            document.getElementById('screen-name-entry').classList.add('hidden');
+            document.getElementById('screen-landing').classList.remove('hidden');
+        }
+
+        function startPlatformWithStudentName() {
+            const input = document.getElementById('studentNameInput');
+            const errAlert = document.getElementById('nameErrorAlert');
+            const val = input ? input.value.trim() : "";
+
+            if (!val) {
+                if (errAlert) errAlert.classList.remove('hidden');
+                if (input) input.focus();
+                return;
+            }
+
+            if (errAlert) errAlert.classList.add('hidden');
+            currentStudentName = val;
+
+            const headerNameElem = document.getElementById('headerStudentName');
+            if (headerNameElem) headerNameElem.innerText = currentStudentName;
+
+            const scoreNameElem = document.getElementById('quizStudentNameDisplay');
+            if (scoreNameElem) scoreNameElem.innerText = currentStudentName;
+
+            document.getElementById('screen-name-entry').classList.add('hidden');
+            document.getElementById('screen-main-platform').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function exitToLanding() {
+            document.getElementById('screen-main-platform').classList.add('hidden');
+            document.getElementById('screen-name-entry').classList.add('hidden');
+            document.getElementById('screen-landing').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchNavTab(targetTab) {
+            const tabs = ['study', 'revision', 'book-solutions', 'questions'];
+            tabs.forEach(t => {
+                const pane = document.getElementById('pane-' + t);
+                const navBtn = document.getElementById('tabNav-' + t);
+                if (pane) pane.classList.add('hidden');
+                if (navBtn) navBtn.classList.remove('active');
+            });
+
+            const activePane = document.getElementById('pane-' + targetTab);
+            const activeNavBtn = document.getElementById('tabNav-' + targetTab);
+            if (activePane) activePane.classList.remove('hidden');
+            if (activeNavBtn) activeNavBtn.classList.add('active');
+
+            window.scrollTo({ top: 120, behavior: 'smooth' });
+        }
+
+        function simulateRequestMethod(method) {
+            const card = document.getElementById('reqSimCard');
+            const title = document.getElementById('reqSimTitle');
+            const target = document.getElementById('reqSimTarget');
+            const desc = document.getElementById('reqSimDesc');
+            const badge = document.getElementById('reqMethodBadge');
+            const btnGet = document.getElementById('btnSimGet');
+            const btnPost = document.getElementById('btnSimPost');
+
+            if (method === 'get') {
+                badge.innerText = "الأسلوب المختار: GET";
+                btnGet.className = "p-3.5 rounded-xl border-2 border-beschool-orange bg-orange-50 text-right space-y-1 transition";
+                btnPost.className = "p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-right space-y-1 transition";
+                
+                title.innerText = "طبيعة الطلب: GET /products?category=books";
+                title.className = "text-xs sm:text-sm font-black text-blue-900 font-mono";
+                target.innerText = "استرجاع بيانات (قراءة)";
+                target.className = "text-[10px] font-mono font-black bg-blue-100 text-blue-800 px-2 py-0.5 rounded";
+                desc.innerText = "يرسل المتصفح طلباً لقراءة قائمة الكتب. الطلب يطلب مورداً من الخادم ولا يغير حالة السجلات بقاعدة البيانات، وتظهر بارامترات البحث في رابط الـ URL.";
+            } else {
+                badge.innerText = "الأسلوب المختار: POST";
+                btnPost.className = "p-3.5 rounded-xl border-2 border-beschool-orange bg-orange-50 text-right space-y-1 transition";
+                btnGet.className = "p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-right space-y-1 transition";
+                
+                title.innerText = "طبيعة الطلب: POST /api/login";
+                title.className = "text-xs sm:text-sm font-black text-orange-950 font-mono";
+                target.innerText = "إرسال بيانات لمعالجتها (أمان)";
+                target.className = "text-[10px] font-mono font-black bg-orange-100 text-beschool-orange px-2 py-0.5 rounded";
+                desc.innerText = "يرسل المتصفح بيانات اسم المستخدم وكلمة المرور المشفرة داخل جسم الطلب (Request Body). لا تظهر البيانات في الرابط لحمايتها، ويقوم الخادم بالتحقق منها.";
+            }
+        }
+
+        function copySummaryTextL32() {
+            const summaryString = `
+ملخص الدرس 3-2: طرق اتصال تطبيقات الويب
+منصة be;school مدرسة البرمجة
+
+1. نموذج العميل والخادم (Client-Server Architecture):
+- العميل (Client): يطلب البيانات أو المعالجة (مثل متصفح الويب وتطبيق الهاتف).
+- الخادم (Server): يستقبل الطلبات ويعالجها ويعيد الاستجابات المناسبة.
+- دورة الطلب والاستجابة: يرسل العميل طلباً واحداً ويعيد الخادم استجابة مطابقة واحدة.
+
+2. بروتوكول HTTP مقابل HTTPS:
+- HTTP: بروتوكول نقل الرسائل والصفحات، عيبه نقل البيانات كنص مكشوف.
+- HTTPS: استخدام HTTP عبر اتصال TLS مشفر يوفر السرية والسلامة ومصادقة الخادم.
+
+3. أساليب طلب HTTP:
+- GET: لطلب مورد أو استرجاع بيانات من الخادم دون تعديل (مثل البحث والتصفح).
+- POST: لإرسال بيانات جديدة أو حساسة ليعالجها الخادم (مثل تسجيل الدخول ونماذج الدفع).
+
+4. رموز حالة HTTP الشهيرة:
+- 200 OK: تمت معالجة الطلب بنجاح.
+- 404 Not Found: المورد المطلوب غير موجود بهذا العنوان (خطأ في جانب العميل).
+- 500 Server Error: حدث خطأ داخلي في جانب الخادم منعه من إكمال الطلب.
+
+5. واجهات API وصيغة JSON:
+- API: مجموعة قواعد تتيح للبرمجيات المختلفة تبادل البيانات والوظائف.
+- JSON: صيغة نصية خفيفة ومهيكلة لتمثيل البيانات باستخدام أزواج المفاتيح والقيم.
+            `.trim();
+
+            const temp = document.createElement('textarea');
+            temp.value = summaryString;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+
+            const label = document.getElementById('copyBtnLabel32');
+            label.innerText = "تم النسخ بنجاح!";
+            setTimeout(() => { label.innerText = "نسخ الملخص"; }, 2000);
+        }
+
+        let isTTSActive32 = false;
+        let preferredVoiceL32 = null;
+
+        function detectEgyptianVoiceL32() {
+            if (!('speechSynthesis' in window)) return;
+            const voices = window.speechSynthesis.getVoices();
+            preferredVoiceL32 = voices.find(v => v.lang === 'ar-EG' || v.lang.includes('ar_EG') || v.name.includes('Egypt') || v.name.includes('Egyptian'))
+                               || voices.find(v => v.lang.startsWith('ar'))
+                               || null;
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = detectEgyptianVoiceL32;
+            detectEgyptianVoiceL32();
+        }
+
+        function readSummaryAloudL32() {
+            if (!('speechSynthesis' in window)) return;
+
+            if (isTTSActive32) {
+                window.speechSynthesis.cancel();
+                isTTSActive32 = false;
+                document.getElementById('ttsIcon32').className = "fa-solid fa-volume-high";
+                document.getElementById('ttsLabel32').innerText = "استمع صوتياً للملخص (مصري سريع)";
+            } else {
+                window.speechSynthesis.cancel();
+
+                const speechContent = "ملخص الدرس الثاني من الوحدة الثالثة: طرق اتصال تطبيقات الويب في مادة البرمجة والذكاء الاصطناعي من منصة بي سكول مدرسة البرمجة. " +
+                    "أولاً: العميل والخادم؛ العميل زي متصفحك بيبعت طلب عشان يشوف صفحة أو يدور على حاجة، والسيرفر يستقبل الطلب ويعالجه ويرجع استجابة واحدة مطابقة. " +
+                    "ثانياً: إتش تي تي بي وإتش تي تي بي إس؛ الاتصال العادي بينقل الكلام مكشوف، لكن إتش تي تي بي إس بيشفر البيانات باتصال تي إل إس آمن عشان محدش يتجسس على الباسوردات بتاعتك. " +
+                    "ثالثاً: أسلوب جيت وبوست؛ جيت بنستخدمه لما نطلب نقرأ أو ندور على بيانات من غير ما نغير حاجة في السيرفر، وبوست بنستخدمه لما نبعت بيانات حساسة زي تسجيل الدخول أو الدفع عشان تتسجل وتتعالج. " +
+                    "رابعاً: رموز الحالة المشهورة؛ ميتين يعني الطلب نجح تمام، وأربعمية وأربعة يعني الصفحة مش موجودة والعيب في الرابط اللي كتبه العميل، وخمسمية يعني السيرفر فيه مشكلة داخلية عطلته. " +
+                    "خامساً: إيه بي آي وجيسون؛ الإيه بي آي هو المترجم اللي بيخلي البرامج تكلم بعض وتاخد بيانات، وجيسون هي صيغة النصوص الخفيفة المنظمة اللي بتبعت البيانات دي في شكل مفاتيح وقيم.";
+
+                const utter = new SpeechSynthesisUtterance(speechContent);
+                utter.lang = 'ar-EG';
+                utter.rate = 1.18;
+                utter.pitch = 1.05;
+
+                if (!preferredVoiceL32) detectEgyptianVoiceL32();
+                if (preferredVoiceL32) utter.voice = preferredVoiceL32;
+
+                utter.onend = () => {
+                    isTTSActive32 = false;
+                    document.getElementById('ttsIcon32').className = "fa-solid fa-volume-high";
+                    document.getElementById('ttsLabel32').innerText = "استمع صوتياً للملخص (مصري سريع)";
+                };
+
+                utter.onerror = () => {
+                    isTTSActive32 = false;
+                    document.getElementById('ttsIcon32').className = "fa-solid fa-volume-high";
+                    document.getElementById('ttsLabel32').innerText = "استمع صوتياً للملخص (مصري سريع)";
+                };
+
+                window.speechSynthesis.speak(utter);
+                isTTSActive32 = true;
+                document.getElementById('ttsIcon32').className = "fa-solid fa-pause text-beschool-orange";
+                document.getElementById('ttsLabel32').innerText = "إيقاف الاستماع";
+            }
+        }
+
+        // بنك الـ 50 سؤالاً الاختيارية المحكمة والمشتقة حصراً من كتاب الوزارة وكتاب الفائز وملف تقييمات البرمجة (توزيع عشوائي متوازن للخيارات أ، ب، جـ، د)
+        const quizBank = [
+            // 1 (الإجابة: ب)
+            {
+                type: "أسئلة التقييمات",
+                q: "في نموذج اتصال تطبيقات الويب، ما الدور الأساسي المنوط بـ 'العميل (Client)'؟",
+                choices: [
+                    "تخزين ملفات قواعد البيانات وسجلات المستخدمين الدائمة",
+                    "إرسال الطلبات للحصول على الموارد أو البيانات من الخادم",
+                    "معالجة العمليات الحسابية وتطبيق قواعد الأمان على السيرفر",
+                    "توفير كابلات الاتصال السلكية بين القارات"
+                ],
+                correctIndex: 1,
+                hint: "التقييمات الأسبوعية وكتاب الوزارة ص 58: العميل يرسل الطلب للحصول على البيانات."
+            },
+            // 2 (الإجابة: جـ)
+            {
+                type: "أسئلة كتاب الفائز",
+                q: "ما الحرف الإضافي الذي يميز بروتوكول HTTPS عن HTTP وما دلالته المباشرة؟",
+                choices: [
+                    "الحرف S يعني Server للدلالة على العمل على الخادم فقط",
+                    "الحرف S يعني Speed للدلالة على مضاعفة سرعة التصفح",
+                    "الحرف S يعني Secure للدلالة على تأمين وتشفير الاتصال ببروتوكول TLS",
+                    "الحرف S يعني System للدلالة على توافقه مع كافة أنظمة التشغيل"
+                ],
+                correctIndex: 2,
+                hint: "كتاب الفائز ص 133 وكتاب الوزارة: الحرف S يعني Secure وأنه محمي باتصال TLS."
+            },
+            // 3 (الإجابة: أ)
+            {
+                type: "مفهوم أساسي",
+                q: "ما التوصيف الصحيح لرمز حالة HTTP رقم (200) عندما يرسله الخادم للمتصفح؟",
+                choices: [
+                    "تمت معالجة الطلب بنجاح تام وتم إرجاع المورد المطلوب",
+                    "المورد المطلوب غير موجود بهذا العنوان المكتوب",
+                    "حدث خطأ داخلي في برمجة الخادم عطل الاستجابة",
+                    "تم حظر وصول المستخدم لعدم دفع الرسوم المقررة"
+                ],
+                correctIndex: 0,
+                hint: "كتاب الوزارة ص 59 وجدول رموز الحالة: 200 تعني النجاح Success."
+            },
+            // 4 (الإجابة: د)
+            {
+                type: "فكر كمهندس / اتخاذ قرار",
+                q: "فكر كمهندس: مطور يصمم صفحة تسجيل دخول الطلاب بكلمات المرور، فما الأسلوب والبروتوكول الإلزامي استخدامهما؟",
+                choices: [
+                    "أسلوب GET عبر بروتوكول HTTP العادي",
+                    "أسلوب POST عبر بروتوكول HTTP غير المشفر",
+                    "أسلوب GET عبر بروتوكول HTTPS المشفر",
+                    "أسلوب POST عبر بروتوكول HTTPS المشفر بـ TLS"
+                ],
+                correctIndex: 3,
+                hint: "ورشة فكر كمهندس ص 61: تسجيل الدخول يتطلب POST للأمان و HTTPS للتشفير."
+            },
+            // 5 (الإجابة: ب)
+            {
+                type: "أسئلة التقييمات",
+                q: "عند رغبة المتصفح في طلب مورد أو عرض صفحة ويب أو استرجاع نتائج بحث دون تعديل في الخادم، فأي أسلوب طلب HTTP يُستخدم عادةً؟",
+                choices: [
+                    "أسلوب POST",
+                    "أسلوب GET",
+                    "أسلوب API",
+                    "أسلوب JSON"
+                ],
+                correctIndex: 1,
+                hint: "تقييمات الأداء ص 55 وجدول ص 59: GET مخصص لطلب مورد أو استرجاع بيانات."
+            },
+            // 6 (الإجابة: جـ)
+            {
+                type: "أسئلة كتاب الفائز",
+                q: "ماذا يعني ظهور رمز حالة HTTP رقم (404) في شاشة المتصفح عند محاولة فتح رابط موقع؟",
+                choices: [
+                    "تمت معالجة الطلب بنجاح وإرسال محتوى الصفحة",
+                    "الخادم معطل تماماً ومحترق فيزيائياً",
+                    "المورد أو الصفحة المطلوبة غير موجودة بهذا العنوان (Not Found)",
+                    "تم حظر حساب المستخدم لانتهاك سياسة الخصوصية"
+                ],
+                correctIndex: 2,
+                hint: "كتاب الفائز ص 134 والوزارة ص 59: 404 المورد المطلوب غير موجود."
+            },
+            // 7 (الإجابة: أ)
+            {
+                type: "بما تفسر / علل",
+                q: "بما تفسر: لماذا تُعد مشكلة ظهور الرمز (404) خطأً من جانب العميل (Client side) وليس من جانب الخادم؟",
+                choices: [
+                    "لأن العميل (المستخدم) هو من طلب مساراً أو رابطاً غير موجود أو كتب عنوان URL به أخطاء إملائية",
+                    "لأن خوادم الويب تتوقف عن العمل دائماً بعد الساعة الثانية عشرة ليلاً",
+                    "لأن لغة البرمجة تجبر المتصفح على إخفاء الصفحات عن الطلاب",
+                    "لأن قاعدة البيانات لا تستطيع تخزين أكثر من 404 صفحة"
+                ],
+                correctIndex: 0,
+                hint: "سؤال توقف وفكر ص 60: العميل طلب عنواناً غير متاح فالخلل في مدخلات العميل."
+            },
+            // 8 (الإجابة: د)
+            {
+                type: "مفهوم أساسي",
+                q: "ما التعريف الدقيق لمصطلح 'واجهة برمجة التطبيقات (API)' في بيئة تطبيقات الويب؟",
+                choices: [
+                    "برنامج لتعديل الصور والفيديوهات على متصفح الويب",
+                    "كابل شبكة يربط شاشة المستخدم بالمعالج المركزي",
+                    "صيغة رياضية لحساب عدد مستخدمي الإنترنت يومياً",
+                    "مجموعة قواعد واضحة تسمح لبرنامج أو تطبيق بطلب بيانات أو وظائف من برنامج آخر"
+                ],
+                correctIndex: 3,
+                hint: "كتاب الوزارة ص 59 وتدرب 1 ص 60: قواعد تسمح لبرنامج بطلب بيانات أو وظائف من آخر."
+            },
+            // 9 (الإجابة: ب)
+            {
+                type: "أسئلة كتاب الفائز",
+                q: "ما التشبيه اليومي البسيط الذي يوضح فكرة عمل واجهة برمجة التطبيقات (API) بين البرامج كما ورد في كتاب الفائز ص 134؟",
+                choices: [
+                    "تشبه سائق القطار الذي يسير في خط مستقيم دون توقف",
+                    "تشبه نادل المطعم الذي ينقل طلب الزبون إلى المطبخ ثم يعود بالوجبة الجاهزة",
+                    "تشبه كتاباً مدرسياً مغلقاً لا يمكن قراءة صفحاته",
+                    "تشبه جرس الإنذار الذي يعمل عند نشوب حريق في المطبخ"
+                ],
+                correctIndex: 1,
+                hint: "كتاب الفائز ص 134: نادل المطعم الذي ينقل طلبك للمطبخ ويعود لك بالنتيجة."
+            },
+            // 10 (الإجابة: جـ)
+            {
+                type: "أسئلة التقييمات",
+                q: "ما الصيغة النصية الشائعة والخفيفة لتمثيل وتبادل البيانات المهيكلة بين العميل والخادم باستخدام كائنات ومصفوفات؟",
+                choices: [
+                    "صيغة HTML",
+                    "صيغة CSS",
+                    "صيغة JSON",
+                    "صيغة SQL"
+                ],
+                correctIndex: 2,
+                hint: "تقييمات الأداء وكتاب الوزارة ص 59: صيغة JSON لتبادل البيانات المهيكلة."
+            },
+            // 11 (الإجابة: أ)
+            {
+                type: "فكر كمهندس / اتخاذ قرار",
+                q: "فكر كمهندس (من تمرين اقرأ البيانات ص 61): في كائن JSON التالي: {\"city\": \"Cairo\", \"temperature\": 31} ما المفتاح وما القيمة المقابلة للحرارة؟",
+                choices: [
+                    "المفتاح هو \"temperature\" وقيمته العددية المقابلة هي 31",
+                    "المفتاح هو 31 وقيمته المقابلة هي \"Cairo\"",
+                    "المفتاح هو \"city\" وقيمته المقابلة هي 31",
+                    "لا توجد مفاتيح في كائنات JSON بل نصوص فقط"
+                ],
+                correctIndex: 0,
+                hint: "كتاب الوزارة ص 61: المفتاح هو \"temperature\" وقيمته هي 31."
+            },
+            // 12 (الإجابة: د)
+            {
+                type: "بما تفسر / علل",
+                q: "بما تفسر: خطورة إرسال بيانات تسجيل الدخول بأسلوب GET بدلاً من أسلوب POST؟",
+                choices: [
+                    "لأن أسلوب GET يستهلك باقة الإنترنت أسرع من أسلوب POST",
+                    "لأن أسلوب GET يتطلب إيقاف تشغيل الخادم قبل إرسال البيانات",
+                    "لأن أسلوب GET لا يعمل إلا في الحواسيب المكتوبة باللغة الصينية",
+                    "لأن أسلوب GET يعرض البيانات الحساسة وكلمات المرور في شريط عنوان المتصفح (URL) وسجلات التصفح"
+                ],
+                correctIndex: 3,
+                hint: "أسلوب GET يلحق البيانات بالرابط، بينما POST يرسلها مخفية في جسم الطلب."
+            },
+            // 13 (الإجابة: ب)
+            {
+                type: "أسئلة التقييمات",
+                q: "رمز حالة HTTP الذي يشير صراحة إلى وقوع 'خطأ داخلي في الخادم منعه من إكمال الطلب' هو:",
+                choices: [
+                    "الرمز 200",
+                    "الرمز 500",
+                    "الرمز 404",
+                    "الرمز 302"
+                ],
+                correctIndex: 1,
+                hint: "كتاب الوزارة ص 59 وتقييمات الأسبوع: الرمز 500 هو خطأ داخلي في الخادم Server Error."
+            },
+            // 14 (الإجابة: جـ)
+            {
+                type: "مفهوم أساسي",
+                q: "ما التوصيف الصحيح لدورة تبادل الرسائل في تطبيقات الويب وفق النموذج الأساسي؟",
+                choices: [
+                    "يرسل العميل طلباً واحداً ويستقبل الخادم 100 طلب متفرقة",
+                    "الخادم يرسل الطلب دائماً والعميل يعيد الاستجابة",
+                    "يرسل العميل طلب HTTP واحد، ويعيد الخادم استجابة مطابقة واحدة",
+                    "الاتصال يتم عبر مكبرات الصوت دون أي رسائل بروتوكولية"
+                ],
+                correctIndex: 2,
+                hint: "الشكل 3.2.1 ص 58 و 59: طلب HTTP واحد واستجابة مطابقة واحدة."
+            },
+            // 15 (الإجابة: أ)
+            {
+                type: "أسئلة كتاب الفائز",
+                q: "أي الأجهزة والبرمجيات التالية يمثل دور 'العميل (Client)' وفق المنهج؟",
+                choices: [
+                    "متصفح الويب (مثل Google Chrome) أو تطبيق على الهاتف الذكي",
+                    "برمجيات إدارة قواعد البيانات على خادم الشركة المركزي",
+                    "جهاز التوجيه (الراوتر) الرئيسي في شركة الاتصالات",
+                    "قرص التخزين الصلب المثبت داخل خادم الويب"
+                ],
+                correctIndex: 0,
+                hint: "كتاب الفائز ص 131 والوزارة: العميل هو المتصفح أو تطبيق الهاتف الذي يرسل الطلب."
+            },
+            // 16 (الإجابة: د)
+            {
+                type: "فكر كمهندس / اتخاذ قرار",
+                q: "فكر كمهندس: تطبيق طقس يطلب من خادم الأرصاد درجات حرارة الأسبوع بصيغة JSON، فما الميزة الرئيسية لاستقبال البيانات بـ JSON؟",
+                choices: [
+                    "أنها صيغة صوتية تتحدث بصوت مرتفع في الهاتف",
+                    "أنها تلغي الحاجة لوجود شاشة هاتف ذكي",
+                    "أنها تحمي الهاتف من الفيروسات الفيزيائية تلقائياً",
+                    "أنها صيغة نصية خفيفة وسهلة القراءة والتحليل للبرامج وتدعمها لغات برمجية كثيرة"
+                ],
+                correctIndex: 3,
+                hint: "سؤال طبق ما تعلمته ص 61 وكتاب الوزارة ص 59: صيغة خفيفة وسهلة القراءة والتحليل."
+            },
+            // 17 (الإجابة: ب)
+            {
+                type: "أسئلة التقييمات",
+                q: "البروتوكول المسؤول عن تنظيم قواعد تبادل الرسائل بين متصفحات الويب والخوادم يسمى:",
+                choices: [
+                    "بروتوكول FTP",
+                    "بروتوكول HTTP",
+                    "بروتوكول DNS",
+                    "بروتوكول SMTP"
+                ],
+                correctIndex: 1,
+                hint: "كتاب الوزارة ص 58 وتقييمات الوزارة: HTTP هو بروتوكول نقل النص التشعبي للويب."
+            },
+            // 18 (الإجابة: جـ)
+            {
+                type: "بما تفسر / علل",
+                q: "بما تفسر: لماذا تفضل البنوك والمتاجر الإلكترونية أسلوب POST عند إرسال عمليات الشراء ونماذج الدفع؟",
+                choices: [
+                    "لأن أسلوب POST مجاني بينما أسلوب GET يتطلب رسوماً لكل عملية",
+                    "لأن أسلوب POST يجعل عملية الشراء سريعة بمقدار 50 ضعفاً",
+                    "لأن أسلوب POST يرسل البيانات داخل جسم الطلب (Body) لمعالجتها ويمنع ظهور أرقام البطاقات في الرابط",
+                    "لأن أسلوب POST يلغي الاتصال بالسيرفر ويحفظ الأموال محلياً"
+                ],
+                correctIndex: 2,
+                hint: "جدول ص 59: POST مخصص لإرسال البيانات ليعالجها الخادم داخل جسم الطلب بأمان."
+            },
+            // 19 (الإجابة: أ)
+            {
+                type: "أسئلة كتاب الفائز",
+                q: "عندما يكتب المستخدم عنوان موقع في المتصفح مثل (https://www.example.com) فإن المتصفح ينفذ اتصالاً:",
+                choices: [
+                    "مؤمناً ومشفراً عبر بروتوكول TLS يحمي سرية الاتصال ومصادقة الخادم",
+                    "مكشوفاً وغير مشفر يسمح بقراءة البيانات بسهولة",
+                    "يعتمد على الرسائل الورقية المطبوعة",
+                    "يعمل دون الحاجة إلى وجود أي خادم على الإنترنت"
+                ],
+                correctIndex: 0,
+                hint: "كتاب الفائز ص 133: البداية بـ https تعني اتصالاً مؤمناً ومحمياً باتصال TLS."
+            },
+            // 20 (الإجابة: د)
+            {
+                type: "مفهوم أساسي",
+                q: "ماذا يقصد بمصطلح 'طريقة طلب HTTP' (HTTP Request Method)؟",
+                choices: [
+                    "اسم المبرمج الذي كتب شفرة صفحة الويب",
+                    "سرعة اتصال الإنترنت بوحدة الميجابايت في الثانية",
+                    "نوع شاشة الهاتف التي يستخدمها الطالب",
+                    "المعلومات المتضمنة في الطلب التي توضح نوع العملية والغرض المطلوب من الخادم (مثل GET أو POST)"
+                ],
+                correctIndex: 3,
+                hint: "كتاب الوزارة ص 59: معلومات توضح نوع العملية والغرض المطلوب."
+            },
+            // 21 (الإجابة: ب)
+            {
+                type: "فكر كمهندس / اتخاذ قرار",
+                q: "فكر كمهندس: مستخدم نقر على زر 'شراء الآن' فظهرت له صفحة بيضاء مكتوب عليها الرمز (500)، فماذا يستنتج؟",
+                choices: [
+                    "أن جهاز هاتفه الشخصي مكسور وبحاجة للشراء من متجر جديد",
+                    "أن هناك عطلاً أو خطأً برمجياً داخلياً في خادم الموقع منعه من إكمال طلب الشراء",
+                    "أن عملية الشراء قد تمت بنجاح وسُحب المبلغ فوراً",
+                    "أن المستخدم كتب اسمه بطريقة خاطئة في حقل الاسم"
+                ],
+                correctIndex: 1,
+                hint: "جدول ص 59 وتدرب 2 ص 60: الرمز 500 يعني خطأ داخلي في الخادم Server Error."
+            },
+            // 22 (الإجابة: جـ)
+            {
+                type: "أسئلة التقييمات",
+                q: "في نموذج اتصال تطبيقات الويب، ما الطرف الذي يستقبل الطلبات ويعالجها ويعيد الاستجابات للعملاء؟",
+                choices: [
+                    "العميل (Client)",
+                    "شريط عنوان المتصفح",
+                    "الخادم (Server)",
+                    "لوحة المفاتيح"
+                ],
+                correctIndex: 2,
+                hint: "تدرب 1 ص 60 وتقييمات الوزارة: الخادم هو الجانب الذي يستقبل ويعالج ويعيد الاستجابة."
+            },
+            // 23 (الإجابة: أ)
+            {
+                type: "بما تفسر / علل",
+                q: "بما تفسر: قدرة تطبيق هاتف ذكي لحجز التذاكر على عرض مواعيد القطارات من خادم السكك الحديدية دون امتلاكه لقاعدة بيانات القطارات؟",
+                choices: [
+                    "عن طريق استخدام واجهة برمجة التطبيقات (API) التي تتيح للتطبيق طلب مواعيد الرحلات من خادم المحطة مباشرة",
+                    "عن طريق تخمين الأوقات عشوائياً بواسطة الذكاء الاصطناعي",
+                    "لأن الهاتف الذكي يقوم بتحميل كافة بيانات الدولة على شريحة الذاكرة",
+                    "لأن وزارة النقل ترسل خطابات بريدية يومية لمستخدمي التطبيق"
+                ],
+                correctIndex: 0,
+                hint: "الـ API تسمح لتطبيق بطلب بيانات ووظائف من تطبيق أو خادم آخر عبر قواعد محددة."
+            },
+            // 24 (الإجابة: د)
+            {
+                type: "أسئلة كتاب الفائز",
+                q: "ما الترتيب التسلسلي الصحيح لدورة تصفح موقع إلكتروني عندما يطلب المستخدم صفحة؟",
+                choices: [
+                    "استجابة الخادم ➔ كتابة العنوان ➔ إرسال الطلب ➔ معالجة العميل",
+                    "معالجة العميل ➔ إرسال الاستجابة ➔ فحص الكود ➔ كتابة العنوان",
+                    "توليد البيانات ➔ إغلاق المتصفح ➔ إرسال الطلب ➔ استجابة الخادم",
+                    "العميل يرسل طلب HTTP بأسلوب محدد ➔ الخادم يعالج الطلب ➔ الخادم يعيد استجابة برمز حالة ومحتوى الصفحة"
+                ],
+                correctIndex: 3,
+                hint: "سؤال الامتحان المقالي ص 60 وكتاب الفائز ص 135: طلب العميل ➔ معالجة الخادم ➔ الاستجابة."
+            },
+            // 25 (الإجابة: ب)
+            {
+                type: "مفهوم أساسي",
+                q: "أي مما يلي يُعد من الخصائص الجوهرية لاتصال HTTPS؟",
+                choices: [
+                    "نقل البيانات كنص صريح يسهل التعديل عليه أثناء النقل",
+                    "حماية سرية الاتصال وسلامة البيانات والتحقق من مصادقة الخادم عبر TLS",
+                    "العمل دون الحاجة لشبكة الإنترنت أو خوادم وسيطة",
+                    "إلغاء الحاجة لكتابة اسم المستخدم وكلمة المرور في المواقع"
+                ],
+                correctIndex: 1,
+                hint: "كتاب الوزارة ص 59: يحمي سرية الاتصال وسلامته ومصادقة الخادم عبر TLS."
+            },
+            // 26 (الإجابة: جـ)
+            {
+                type: "أسئلة التقييمات",
+                q: "عند ملء نموذج استبيان أو نموذج اتصال وإرساله عبر صفحة الويب، فما طريقة طلب HTTP الأنسب؟",
+                choices: [
+                    "طريقة GET",
+                    "طريقة 404",
+                    "طريقة POST",
+                    "طريقة 200"
+                ],
+                correctIndex: 2,
+                hint: "تمارين ص 62 وتقييمات الوزارة: إرسال محتويات النماذج يستخدم أسلوب POST."
+            },
+            // 27 (الإجابة: أ)
+            {
+                type: "فكر كمهندس / اتخاذ قرار",
+                q: "فكر كمهندس: موقع مدرسة يعرض قائمة أسماء أوائل الطلاب للجمهور، فما طريقة طلب HTTP المناسبة لعرض هذه الصفحة؟",
+                choices: [
+                    "طريقة GET لأنها تطلب استرجاع وقراءة بيانات للعرض دون إرسال بيانات لتعديلها في الخادم",
+                    "طريقة POST لأنها الطريقة الوحيدة التي تفهم اللغة العربية",
+                    "طريقة JSON لأنها لا تحتاج لبروتوكول اتصال",
+                    "طريقة 500 لأنها تسرع تحميل الأسماء"
+                ],
+                correctIndex: 0,
+                hint: "تمارين ص 62 وجدول ص 59: عرض صفحة ويب وقراءة محتواها يستخدم أسلوب GET."
+            },
+            // 28 (الإجابة: د)
+            {
+                type: "بما تفسر / علل",
+                q: "بما تفسر: لماذا لا يحدد رمز الحالة (500) السبب التفصيلي الدقيق للمشكلة في شاشة المستخدم؟",
+                choices: [
+                    "لأن الخادم لا يعرف أين تقع المشكلة أصلاً",
+                    "لأن المتصفح يمنع كتابة الكلمات التي تزيد عن 3 أحرف",
+                    "لأن المشكلة تكون بسبب بطء بطارية هاتف المستخدم دائماً",
+                    "لأن الرمز يشير بصفة عامة إلى خطأ داخلي في الخادم، ولأسباب أمنية لا تكشف الخوادم تفاصيل أخطائها البرمجية للعامة منعاً لاستغلالها"
+                ],
+                correctIndex: 3,
+                hint: "جدول ص 59: خطأ داخلي في الخادم ولا يحدد الرمز وحده السبب التفصيلي لحماية الخادم."
+            },
+            // 29 (الإجابة: ب)
+            {
+                type: "أسئلة كتاب الفائز",
+                q: "في بنية JSON، كيف تُمثل البيانات عادةً داخل الأقواس المعقوفة { }؟",
+                choices: [
+                    "في شكل فقرات شعرية متتالية غير منقطة",
+                    "في شكل أزواج تتكون من مفتاح (Key) وقيمة مقابلة له (Value) تفصل بينهما نقطتان عموديتان",
+                    "في شكل جداول ورقية مرسومة بالمسطرة والقلم",
+                    "في شكل أرقام عشوائية لا رابط بينها"
+                ],
+                correctIndex: 1,
+                hint: "كتاب الفائز ص 134 والوزارة ص 61: أزواج من المفاتيح والقيم Key-Value pairs."
+            },
+            // 30 (الإجابة: جـ)
+            {
+                type: "أسئلة التقييمات",
+                q: "أي من رموز حالة HTTP التالية يعتبر مؤشراً صريحاً على نجاح العملية واستلام البيانات؟",
+                choices: [
+                    "الرمز 404",
+                    "الرمز 500",
+                    "الرمز 200",
+                    "الرمز 301"
+                ],
+                correctIndex: 2,
+                hint: "تقييمات الوزارة ص 56 وجدول ص 59: الرمز 200 يعني نجاح الطلب بالكامل."
+            },
+            // 31 (الإجابة: أ)
+            {
+                type: "مفهوم أساسي",
+                q: "ماذا يقصد بـ 'رمز حالة HTTP' (HTTP Status Code)؟",
+                choices: [
+                    "رقم ثلاثي يرسله الخادم ضمن الاستجابة ليوضح للعميل نتيجة معالجة الطلب (كالنجاح أو الخطأ)",
+                    "كلمة المرور السرية التي يكتبها المستخدم لتسجيل الدخول",
+                    "رقم المنفذ الذي تتصل به لوحة المفاتيح بالحاسوب",
+                    "كود التشفير الذي يحمي كابلات الإنترنت البحرية"
+                ],
+                correctIndex: 0,
+                hint: "كتاب الوزارة ص 59: رقم يشير إلى نتيجة المعالجة يسمى رمز حالة HTTP."
+            },
+            // 32 (الإجابة: د)
+            {
+                type: "فكر كمهندس / اتخاذ قرار",
+                q: "فكر كمهندس: مطور برمجيات يريد ربط تطبيق المتجر ببوابة الدفع الإلكتروني لأحد البنوك، فما الأداة البرمجية المعتمدة لتحقيق هذا الاتصال الآمن؟",
+                choices: [
+                    "تثبيت شاشة عرض إضافية بجوار الخادم",
+                    "إرسال رسائل نصية قصيرة SMS بين أجهزة الصراف الآلي",
+                    "حذف قاعدة بيانات المتجر لتسهيل الحسابات",
+                    "استخدام واجهة برمجة التطبيقات (API) الخاصة بالبنك لتبادل طلبات الدفع واستقبال النتائج عبر HTTPS"
+                ],
+                correctIndex: 3,
+                hint: "الـ API هي العقد والقواعد المحددة لتبادل العمليات البرمجية بين الأنظمة المختلفة."
+            },
+            // 33 (الإجابة: ب)
+            {
+                type: "بما تفسر / علل",
+                q: "بما تفسر: لماذا تدعم لغات وأدوات البرمجة المختلفة صيغة JSON بكثرة في تبادل بيانات تطبيقات الويب؟",
+                choices: [
+                    "لأن صيغة JSON تخفض استهلاك الشاشة للطاقة بنسبة 80%",
+                    "لأنها صيغة نصية خفيفة الوزن وسهلة القراءة للبشر وسهلة التحليل البرمجي للحواسيب مقارنة بغيرها",
+                    "لأن شركة مايكروسوفت تجبر جميع الحواسيب على استخدامها فقط",
+                    "لأن صيغة JSON لا تحتاج إلى وجود شبكة إنترنت لتعمل"
+                ],
+                correctIndex: 1,
+                hint: "كتاب الوزارة ص 59: صيغة نصية شائعة لتبادل البيانات المهيكلة وتدعمها لغات كثيرة."
+            },
+            // 34 (الإجابة: جـ)
+            {
+                type: "أسئلة كتاب الفائز",
+                q: "ما البروتوكول الذي يضمن حماية بيانات بطاقات الائتمان أثناء الدفع الإلكتروني عبر المتصفح كما ورد في كتاب الفائز ص 133؟",
+                choices: [
+                    "بروتوكول HTTP العادي",
+                    "بروتوكول FTP لنقل الملفات",
+                    "بروتوكول HTTPS المحمي باتصال TLS",
+                    "بروتوكول DNS لترجمة الأسماء"
+                ],
+                correctIndex: 2,
+                hint: "كتاب الفائز ص 133: HTTPS هو الذي يوفر الحماية والأمان للبيانات أثناء النقل."
+            },
+            // 35 (الإجابة: أ)
+            {
+                type: "أسئلة التقييمات",
+                q: "البيانات التي ترسل عادة في أسلوب POST ليعالجها الخادم، أين يتم وضعها وتضمينها داخل الطلب؟",
+                choices: [
+                    "داخل جسم الطلب (Request Body) بمعزل عن الرابط الظاهر",
+                    "في نهاية شريط عنوان الموقع (URL) ليراها المستخدم",
+                    "على شاشة الهاتف كرسالة تنبيهية للمارة",
+                    "في ملف نصي ورقي يرسل بالبريد العادي"
+                ],
+                correctIndex: 0,
+                hint: "أسلوب POST يضع البيانات في الـ Request Body لحمايتها ومعالجتها."
+            },
+            // 36 (الإجابة: د)
+            {
+                type: "مفهوم أساسي",
+                q: "أي مما يلي يُعد من أوجه القصور لبروتوكول HTTP العادي؟",
+                choices: [
+                    "عدم قدرته على نقل الصور أو النصوص",
+                    "عدم عمله على أنظمة تشغيل الهواتف الذكية",
+                    "صعوبة قراءته من قبل خوادم الويب الحديثة",
+                    "نقل البيانات كنص صريح وغير مشفر، مما يجعله عرضة للتنصت والتلاعب من قِبل أطراف ثالثة"
+                ],
+                correctIndex: 3,
+                hint: "كتاب الوزارة ص 59: عدم التشفير يجعله عرضة للتجسس والتعديل أثناء النقل."
+            },
+            // 37 (الإجابة: ب)
+            {
+                type: "فكر كمهندس / اتخاذ قرار",
+                q: "فكر كمهندس: مستخدم قام بالبحث عن كتاب في متجر إلكتروني، فأي مسار اتصال يمثل هذا الإجراء بدقة؟",
+                choices: [
+                    "إرسال طلب POST مشفر لتسجيل بيانات الكتاب في قاعدة البيانات",
+                    "إرسال طلب GET يتضمن كلمات البحث ➔ الخادم يسترجع النتائج ➔ يعيد استجابة برمز 200 لعرض الكتب",
+                    "إغلاق المتصفح فوراً وإرسال كود 500 للمستخدم",
+                    "الاتصال بخادم الطقس للحصول على درجة حرارة الغرفة"
+                ],
+                correctIndex: 1,
+                hint: "تمارين ص 62: استرجاع نتائج البحث عملية قراءة تستخدم أسلوب GET وتعيد كود 200 عند النجاح."
+            },
+            // 38 (الإجابة: جـ)
+            {
+                type: "أسئلة كتاب الفائز",
+                q: "ماذا يحدث عندما يرسل العميل طلباً بأسلوب GET لصفحة ويب تم حذفها نهائياً من الخادم؟",
+                choices: [
+                    "يعيد الخادم استجابة برمز الحالة 200 OK وتفتح الصفحة فارغة",
+                    "يتوقف حاسوب العميل عن العمل ويحتاج لإعادة تثبيت الويندوز",
+                    "يعيد الخادم استجابة برمز الحالة 404 Not Found تفيد بعدم وجود المورد",
+                    "يقوم الخادم بخصم رصيد مالي من حساب المستخدم تلقائياً"
+                ],
+                correctIndex: 2,
+                hint: "كتاب الفائز ص 134 وجدول ص 59: الصفحة المحذوفة تعيد الرمز 404 Not Found."
+            },
+            // 39 (الإجابة: أ)
+            {
+                type: "أسئلة التقييمات",
+                q: "ما المصطلح المنهجي الدقيق لاختصار (JSON) باللغة الإنجليزية؟",
+                choices: [
+                    "JavaScript Object Notation",
+                    "Java System Operating Network",
+                    "Joint Security Online Node",
+                    "Just Simple Open Name"
+                ],
+                correctIndex: 0,
+                hint: "كتاب الوزارة ص 59: JavaScript Object Notation."
+            },
+            // 40 (الإجابة: د)
+            {
+                type: "بما تفسر / علل",
+                q: "بما تفسر: أهمية مصادقة الخادم (Server Authentication) التي يوفرها بروتوكول HTTPS للمتصفحات؟",
+                choices: [
+                    "لأنها تلغي الحاجة لشراء شهادات أمان من جهات التوثيق",
+                    "لأنها تضمن أن سرعة المعالج لن تتأثر بالحرارة",
+                    "لأنها تجعل تصميم الموقع ملوناً وجذاباً للمستخدمين",
+                    "لأنها تؤكد للمتصفح والمستخدم أنه يتصل بالخادم الحقيقي للموقع وليس بموقع احتيالي مزور ينتحل اسمه"
+                ],
+                correctIndex: 3,
+                hint: "كتاب الوزارة ص 59: يساعد على مصادقة الخادم والتأكد من هويته وموقعه الحقيقي."
+            },
+            // 41 (الإجابة: ب)
+            {
+                type: "فكر كمهندس / اتخاذ قرار",
+                q: "فكر كمهندس: إذا أردت معرفة سبب فشل تحميل صفحة ويب معينة، فأي أداة أو معلومة في الاستجابة تساعدك أولاً على تشخيص الخلل؟",
+                choices: [
+                    "حجم شاشة الهاتف المحمول",
+                    "رمز حالة HTTP (مثل 404 أو 500) الوارد في ترويسة الاستجابة",
+                    "عدد أزرار لوحة المفاتيح المتصلة بالجهاز",
+                    "لون خلفية الموقع المكتوب بلغة CSS"
+                ],
+                correctIndex: 1,
+                hint: "سؤال فكر وتحد نفسك ص 62: رمز الحالة هو الذي يخبرك مباشرة أين وقع الخطأ ولماذا."
+            },
+            // 42 (الإجابة: جـ)
+            {
+                type: "مفهوم أساسي",
+                q: "في نموذج الطلب والاستجابة، متى ينتهي دور الخادم في دورة الاتصال المحددة؟",
+                choices: [
+                    "بمجرد كتابة المستخدم للعنوان في شريط المتصفح",
+                    "عند قيام الخادم بإيقاف تشغيل الكهرباء عن أجهزته",
+                    "بمجرد إرسال حزمة الاستجابة (Response) المحملة برمز الحالة والبيانات إلى العميل",
+                    "لا ينتهي دور الخادم أبداً ويظل يرسل البيانات دون توقف"
+                ],
+                correctIndex: 2,
+                hint: "الشكل 3.2.1 ص 58: تنتهي الدورة بإعادة الاستجابة والبيانات المطلوبة للعميل."
+            },
+            // 43 (الإجابة: أ)
+            {
+                type: "أسئلة كتاب الفائز",
+                q: "أي الأنشطة التالية يمثل استخداماً صريحاً لأسلوب POST وفق تصنيف كتاب الفائز ص 133؟",
+                choices: [
+                    "إدخال المعرف وكلمة المرور في نموذج تسجيل الدخول وإرسالهما للخادم",
+                    "الضغط على رابط للانتقال لقراءة مقال إخباري عام",
+                    "كتابة كلمة في مربع البحث ورؤية نتائج المنتجات",
+                    "عرض الصفحة الرئيسية لجريدة يومية عبر الإنترنت"
+                ],
+                correctIndex: 0,
+                hint: "كتاب الفائز ص 133 وتمارين ص 62: إرسال بيانات الدخول يمثل استخداماً صريحاً لـ POST."
+            },
+            // 44 (الإجابة: د)
+            {
+                type: "أسئلة التقييمات",
+                q: "الطرف المسؤول عن طلب البيانات أو بدء المعالجة في تطبيقات الويب هو:",
+                choices: [
+                    "خادم قواعد البيانات المركزي",
+                    "محرك التبريد الميكانيكي للخادم",
+                    "ملف التنسيق بلغة CSS",
+                    "العميل (Client)"
+                ],
+                correctIndex: 3,
+                hint: "تقييمات الوزارة ص 55 وكتاب الوزارة ص 58: العميل هو الجانب الذي يطلب."
+            },
+            // 45 (الإجابة: ب)
+            {
+                type: "بما تفسر / علل",
+                q: "بما تفسر: لماذا تُعد واجهات برمجة التطبيقات (APIs) ركيزة أساسية في بناء تطبيقات الهواتف الذكية الحديثة؟",
+                choices: [
+                    "لأن الهواتف الذكية تمنع تثبيت التطبيقات التي لا تستخدم لغة C++",
+                    "لأنها تمكن تطبيق الهاتف الخفيف من طلب البيانات والخدمات الحسابية من خوادم سحابية عملاقة وعرض النتائج للمستخدم فوراً",
+                    "لأن الـ API تحذف الإعلانات المزعجة من الشاشة نهائياً",
+                    "لأنها تضاعف حجم بطارية الهاتف الذكي"
+                ],
+                correctIndex: 1,
+                hint: "الـ API تجعل التطبيق الصغير يتصل بخوادم ضخمة ويعرض البيانات بصيغ خفيفة كـ JSON."
+            },
+            // 46 (الإجابة: جـ)
+            {
+                type: "فكر كمهندس / اتخاذ قرار",
+                q: "فكر كمهندس: في نموذج طلب HTTP، إذا استقبل المتصفح رمز الحالة (200)، فما التصرف الطبيعي للمتصفح؟",
+                choices: [
+                    "إظهار رسالة خطأ تحذر من تعطل الموقع",
+                    "إغلاق المتصفح تلقائياً لحفظ الأمان",
+                    "قراءة البيانات المستلمة وعرض محتوى صفحة الويب بنجاح للمستخدم",
+                    "إعادة إرسال طلب GET عشرات المرات للتأكد"
+                ],
+                correctIndex: 2,
+                hint: "الرمز 200 يعني نجاح العملية بالكامل وقراءة محتوى الصفحة وعرضه."
+            },
+            // 47 (الإجابة: أ)
+            {
+                type: "مفهوم أساسي",
+                q: "ما المقصود بمصطلح 'المورد (Resource)' في سياق رسائل طلبات الويب؟",
+                choices: [
+                    "الملف أو البيانات أو الصفحة أو الخدمة المحددة التي يطلبها العميل من الخادم عبر عنوان الـ URL",
+                    "كابل الكهرباء الذي يغذي جهاز الراوتر بالمنزل",
+                    "عدد أجهزة الحواسيب المباعة في الأسواق المحلية",
+                    "المبلغ المالي المودع في الحساب البنكي لصاحب الموقع"
+                ],
+                correctIndex: 0,
+                hint: "كتاب الوزارة ص 59: المورد هو الصفحة أو البيانات التي يطلبها العميل عبر الرابط."
+            },
+            // 48 (الإجابة: د)
+            {
+                type: "أسئلة كتاب الفائز",
+                q: "أي العبارات التالية غير صحيحة فيما يتعلق بأسلوب الطلب GET؟",
+                choices: [
+                    "يُستخدم عادةً لطلب مورد أو استرجاع بيانات من الخادم",
+                    "تظهر معايير وبيانات الطلب عادةً ضمن عنوان الـ URL",
+                    "مناسب لعرض صفحات الويب وتصفح نتائج البحث العامة",
+                    "يُعد الخيار المثالي والأكثر أماناً لإرسال كلمات المرور وبيانات البطاقات البنكية"
+                ],
+                correctIndex: 3,
+                hint: "كتاب الفائز ص 133: GET غير آمن لإرسال كلمات المرور لأنه يعرضها في شريط العنوان."
+            },
+            // 49 (الإجابة: ب)
+            {
+                type: "أسئلة التقييمات",
+                q: "في بروتوكول نقل النص التشعبي، ما الصيغة أو البروتوكول الذي يدمج التشفير ومصادقة الخادم مع HTTP؟",
+                choices: [
+                    "بروتوكول HTTP 1.0",
+                    "بروتوكول HTTPS المدعوم بـ TLS",
+                    "بروتوكول IP النقي",
+                    "بروتوكول JSON المفتوح"
+                ],
+                correctIndex: 1,
+                hint: "كتاب الوزارة وتقييمات الأداء: HTTPS هو HTTP عبر اتصال TLS آمن."
+            },
+            // 50 (الإجابة: جـ)
+            {
+                type: "ختام الوحدة الثالثة",
+                q: "ما الخلاصة المتكاملة لكيفية تواصل وتشغيل تطبيقات الويب وفق ما تعلمته في الدرس 3-2؟",
+                choices: [
+                    "اعتماد العميل على نفسه في معالجة كل البيانات دون الحاجة لأي خوادم أو شبكات",
+                    "استخدام البريد العادي لإرسال الاستفسارات والرد عليها أسبوعياً",
+                    "تبادل منظم يطلب فيه العميل ويستجيب الخادم عبر HTTP/HTTPS، بأسلوبي GET أو POST، وبإشعار رمز الحالة، وتبادل بيانات مهيكلة عبر API و JSON",
+                    "إلغاء بروتوكولات الاتصال والاعتماد على الذكاء الاصطناعي في نقل الأفكار بالتخاطر"
+                ],
+                correctIndex: 2,
+                hint: "الخلاصة المنهجية ص 62: تبادل منظم بين العميل والخادم يحكمه البروتوكول وأساليب الطلب ورموز الحالة وواجهات API."
+            }
+        ];
+
+        let curQIdx = 0;
+        let selectedOptions = new Array(quizBank.length).fill(null);
+
+        function renderQuickNav() {
+            const container = document.getElementById('quickNavGrid');
+            if (!container) return;
+
+            let gridHtml = '';
+            let answeredCount = 0;
+
+            quizBank.forEach((_, idx) => {
+                const isCurrent = curQIdx === idx;
+                const isAnswered = selectedOptions[idx] !== null;
+                if (isAnswered) answeredCount++;
+
+                let stateClass = 'bg-white text-beschool-slate border-slate-200 hover:border-beschool-orange';
+                if (isAnswered) {
+                    stateClass = 'bg-emerald-50 text-emerald-700 border-emerald-300 font-black';
+                }
+                if (isCurrent) {
+                    stateClass = 'bg-beschool-orange text-white border-beschool-orange ring-2 ring-orange-200 font-black';
+                }
+
+                gridHtml += `
+                    <button onclick="jumpToQuestion(${idx})" class="h-7 rounded-lg border text-[11px] flex items-center justify-center transition ${stateClass}">
+                        ${idx + 1}
+                    </button>
+                `;
+            });
+
+            container.innerHTML = gridHtml;
+            const badge = document.getElementById('quizAnsweredBadge');
+            if (badge) {
+                badge.innerText = `تمت الإجابة: ${answeredCount} / ${quizBank.length}`;
+            }
+        }
+
+        function jumpToQuestion(targetIndex) {
+            curQIdx = targetIndex;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const qData = quizBank[curQIdx];
+            document.getElementById('activeQIndex').innerText = curQIdx + 1;
+            document.getElementById('totalQCount').innerText = quizBank.length;
+
+            renderQuickNav();
+
+            let typeBadgeColor = 'bg-orange-100 text-beschool-orange border-orange-200';
+            if (qData.type.includes('بما تفسر')) typeBadgeColor = 'bg-blue-100 text-blue-700 border-blue-200';
+            if (qData.type.includes('فكر كمهندس')) typeBadgeColor = 'bg-purple-100 text-purple-700 border-purple-200';
+            if (qData.type.includes('أسئلة التقييمات')) typeBadgeColor = 'bg-emerald-100 text-emerald-700 border-emerald-200';
+            if (qData.type.includes('كتاب الفائز')) typeBadgeColor = 'bg-amber-100 text-amber-800 border-amber-200';
+
+            let choicesHtml = '';
+            qData.choices.forEach((cText, i) => {
+                const isSelected = selectedOptions[curQIdx] === i;
+                const borderClass = isSelected 
+                    ? 'border-beschool-orange bg-orange-50 font-black ring-1 ring-beschool-orange' 
+                    : 'border-beschool-border hover:bg-slate-50 font-medium';
+                
+                const circleClass = isSelected
+                    ? 'bg-beschool-orange text-white border-beschool-orange'
+                    : 'bg-white text-beschool-slate border-slate-300';
+
+                choicesHtml += `
+                    <div onclick="pickQuizAnswer(${i})" class="p-3 sm:p-3.5 rounded-xl border ${borderClass} cursor-pointer transition flex items-center gap-3 text-right">
+                        <div class="w-6 h-6 rounded-full border flex items-center justify-center text-xs font-bold ${circleClass} shrink-0">
+                            ${['أ', 'ب', 'ج', 'د'][i]}
+                        </div>
+                        <span class="text-xs sm:text-sm text-beschool-navy leading-relaxed">${cText}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('quizContainer').innerHTML = `
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-[11px] font-black px-2.5 py-0.5 rounded-md border ${typeBadgeColor}">
+                            <i class="fa-solid fa-tag ml-1"></i> نوع السؤال: ${qData.type}
+                        </span>
+                        <button onclick="toggleHint(${curQIdx})" class="text-[11px] font-bold text-beschool-orange hover:underline flex items-center gap-1">
+                            <i class="fa-regular fa-lightbulb"></i> تلميح تعليمي
+                        </button>
+                    </div>
+
+                    <div id="hintBox_${curQIdx}" class="hidden p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs leading-relaxed text-right">
+                        <strong class="block mb-0.5">إرشاد للتفكير:</strong>
+                        ${qData.hint}
+                    </div>
+
+                    <h4 class="text-sm sm:text-base font-black text-beschool-navy leading-relaxed pt-1 text-right">
+                        ${curQIdx + 1}. ${qData.q}
+                    </h4>
+                    
+                    <div class="space-y-2 pt-1">${choicesHtml}</div>
+                    
+                    <div id="quizAlert" class="hidden p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold text-right">
+                        <i class="fa-solid fa-circle-exclamation ml-1"></i> يُرجى اختيار إجابة للمتابعة!
+                    </div>
+                </div>
+            `;
+
+            const prevBtn = document.getElementById('btnPrevQ');
+            if (curQIdx > 0) prevBtn.classList.remove('hidden');
+            else prevBtn.classList.add('hidden');
+
+            const nextBtn = document.getElementById('btnNextQ');
+            if (curQIdx === quizBank.length - 1) {
+                nextBtn.innerHTML = `<span>إنهاء وحساب النتيجة</span> <i class="fa-solid fa-check-double mr-1"></i>`;
+            } else {
+                nextBtn.innerHTML = `<span>السؤال التالي</span> <i class="fa-solid fa-arrow-left mr-1"></i>`;
+            }
+        }
+
+        function toggleHint(idx) {
+            const h = document.getElementById(`hintBox_${idx}`);
+            if (h) h.classList.toggle('hidden');
+        }
+
+        function pickQuizAnswer(choiceIdx) {
+            selectedOptions[curQIdx] = choiceIdx;
+            renderQuestion();
+        }
+
+        function nextQuestion() {
+            if (selectedOptions[curQIdx] === null) {
+                const alrt = document.getElementById('quizAlert');
+                if (alrt) alrt.classList.remove('hidden');
+                return;
+            }
+            if (curQIdx < quizBank.length - 1) {
+                curQIdx++;
+                renderQuestion();
+            } else {
+                finalizeQuiz();
+            }
+        }
+
+        function prevQuestion() {
+            if (curQIdx > 0) {
+                curQIdx--;
+                renderQuestion();
+            }
+        }
+
+        function finalizeQuiz() {
+            let score = 0;
+            quizBank.forEach((item, idx) => {
+                if (selectedOptions[idx] === item.correctIndex) {
+                    score++;
+                }
+            });
+
+            document.getElementById('quizContainer').classList.add('hidden');
+            document.getElementById('btnPrevQ').classList.add('hidden');
+            document.getElementById('btnNextQ').classList.add('hidden');
+
+            const scoreBox = document.getElementById('quizScoreboard');
+            scoreBox.classList.remove('hidden');
+
+            const percent = Math.round((score / quizBank.length) * 100);
+            document.getElementById('quizScoreText').innerHTML = `
+                حصلت على <span class="text-beschool-orange text-lg font-black">${score} من أصل ${quizBank.length}</span> بنسبة <span class="text-emerald-600 text-lg font-black">${percent}%</span>.
+            `;
+
+            const statsElem = document.getElementById('quizStatsDetails');
+            if (statsElem) {
+                statsElem.innerText = `الإجابات الصحيحة: ${score} | غير الصحيحة أو المتروكة: ${quizBank.length - score}`;
+            }
+
+            applyTargetedFeedback(percent);
+            renderDetailedReview();
+
+            window.scrollTo({ top: 300, behavior: 'smooth' });
+        }
+
+        function applyTargetedFeedback(percent) {
+            const card = document.getElementById('motivationCard');
+            const iconContainer = document.getElementById('scoreIconContainer');
+            if (!card) return;
+
+            const name = currentStudentName || "يا بطل";
+
+            if (percent >= 95) {
+                iconContainer.className = "w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto shadow-sm";
+                iconContainer.innerHTML = '<i class="fa-solid fa-trophy"></i>';
+                card.className = "max-w-xl mx-auto p-4 sm:p-5 rounded-2xl bg-emerald-50 border-2 border-emerald-400 text-right space-y-2 shadow-xs";
+                card.innerHTML = `
+                    <div class="flex items-center gap-2 text-emerald-800 font-black text-sm sm:text-base">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
+                        <span>التقدير: ممتاز (فوق 95%)</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-emerald-950 leading-relaxed font-bold">
+                        أحسنت يا ${name}، مجهود ممتاز وتركيز واضح في حل الأسئلة غير المباشرة وفهم عميق لطرق اتصال الويب بين العميل والخادم، وبروتوكول HTTPS، وأساليب الطلب GET و POST، ورموز الحالة وصيغة JSON. حافظ على هذا المستوى الرائع في باقي الدروس والوحدات.
+                    </p>
+                `;
+            } else if (percent >= 90) {
+                iconContainer.className = "w-16 h-16 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-3xl mx-auto shadow-sm";
+                iconContainer.innerHTML = '<i class="fa-solid fa-medal"></i>';
+                card.className = "max-w-xl mx-auto p-4 sm:p-5 rounded-2xl bg-blue-50 border-2 border-blue-400 text-right space-y-2 shadow-xs";
+                card.innerHTML = `
+                    <div class="flex items-center gap-2 text-blue-800 font-black text-sm sm:text-base">
+                        <i class="fa-solid fa-award text-blue-600 text-lg"></i>
+                        <span>التقدير: جيد جداً (من 90% إلى 94%)</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-blue-950 leading-relaxed font-bold">
+                        أداء طيب يا ${name}، إجاباتك تدل على استيعابك للمفاهيم الأساسية لدورة الطلب والاستجابة ورموز الحالة وواجهات API. راجع النقاط البسيطة التي أخطأت فيها في القائمة بالأسفل لتصل للدرجة الكاملة.
+                    </p>
+                `;
+            } else {
+                iconContainer.className = "w-16 h-16 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-3xl mx-auto shadow-sm";
+                iconContainer.innerHTML = '<i class="fa-solid fa-book-open-reader"></i>';
+                card.className = "max-w-xl mx-auto p-4 sm:p-5 rounded-2xl bg-amber-50 border-2 border-amber-400 text-right space-y-2 shadow-xs";
+                card.innerHTML = `
+                    <div class="flex items-center gap-2 text-amber-900 font-black text-sm sm:text-base">
+                        <i class="fa-solid fa-circle-exclamation text-amber-600 text-lg"></i>
+                        <span>النتيجة: أقل من 90% — محتاج تذاكر تاني</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-amber-950 leading-relaxed font-bold">
+                        يا ${name}، الأسئلة كانت محتاجة تركيز وفهم دقيق، والنتيجة بتوضح إنك محتاج تراجع الشرح بتركيز أكبر وتفهم المفاهيم اللي وقعت فيها، خصوصاً الفارق بين أسلوبي GET و POST ودلالات رموز الحالة 404 و 500 واستخدامات API وصيغة JSON. راجع مراجعة الأسئلة بالأسفل وأعد الاختبار لتثبيت المعلومة.
+                    </p>
+                `;
+            }
+        }
+
+        function renderDetailedReview() {
+            const container = document.getElementById('quizReviewList');
+            if (!container) return;
+
+            let reviewHtml = '';
+
+            quizBank.forEach((qItem, idx) => {
+                const userChoiceIdx = selectedOptions[idx];
+                const isCorrect = userChoiceIdx === qItem.correctIndex;
+                const wasAnswered = userChoiceIdx !== null;
+
+                const statusBadge = isCorrect
+                    ? '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-200"><i class="fa-solid fa-circle-check text-emerald-600"></i> إجابة صحيحة</span>'
+                    : '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-100 text-rose-800 border border-rose-200"><i class="fa-solid fa-circle-xmark text-rose-600"></i> إجابة خاطئة</span>';
+
+                const borderCardClass = isCorrect
+                    ? 'border-emerald-200 bg-white'
+                    : 'border-rose-200 bg-rose-50/20';
+
+                const userChoiceText = wasAnswered
+                    ? qItem.choices[userChoiceIdx]
+                    : 'لم تجب على هذا السؤال';
+
+                const correctAnswerText = qItem.choices[qItem.correctIndex];
+
+                reviewHtml += `
+                    <div class="p-4 rounded-xl border ${borderCardClass} text-xs sm:text-sm space-y-2.5 text-right transition">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                            <span class="font-black text-beschool-navy">السؤال ${idx + 1}: ${qItem.type}</span>
+                            ${statusBadge}
+                        </div>
+                        
+                        <p class="font-bold text-beschool-slate leading-relaxed">
+                            ${qItem.q}
+                        </p>
+
+                        <div class="space-y-1.5 pt-1">
+                            <div class="p-2.5 rounded-lg ${isCorrect ? 'bg-emerald-50 text-emerald-900 border border-emerald-200' : 'bg-rose-50 text-rose-900 border border-rose-200'}">
+                                <strong>إجابتك:</strong> ${userChoiceText}
+                            </div>
+                            
+                            ${!isCorrect ? `
+                                <div class="p-2.5 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200">
+                                    <strong>الإجابة الصحيحة المعتمدة:</strong> ${correctAnswerText}
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 text-[11px] leading-relaxed">
+                            <strong class="text-beschool-navy block mb-0.5"><i class="fa-regular fa-lightbulb text-amber-500 ml-1"></i> التوضيح العلمي والتلميح:</strong>
+                            ${qItem.hint}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = reviewHtml;
+        }
+
+        function resetQuizEngine() {
+            curQIdx = 0;
+            selectedOptions = new Array(quizBank.length).fill(null);
+            document.getElementById('quizScoreboard').classList.add('hidden');
+            document.getElementById('quizContainer').classList.remove('hidden');
+            document.getElementById('btnNextQ').classList.remove('hidden');
+            renderQuestion();
+            window.scrollTo({ top: 350, behavior: 'smooth' });
+        }
+
+        window.onload = function() {
+            detectEgyptianVoiceL32();
+            renderQuestion();
+            simulateRequestMethod('get');
+        };
+    </script>
+</body>
+</html>
